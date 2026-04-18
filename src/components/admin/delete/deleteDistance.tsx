@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
-import axios from "axios";
+import {useState} from "react";
+import {api} from "../../../api/axios";
 import {useNavigate} from "react-router-dom";
+import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 export default function DeleteDistance() {
     const [error, setError] = useState<string | null>(null);
@@ -8,31 +9,16 @@ export default function DeleteDistance() {
     const [name, setName] = useState<string>("");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkToken = async () => {
-            try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/admin/verify`);
-
-                if(!res.data.success) {
-                    navigate('/admin/login');
-                }
-            } catch (e: any) {
-                console.error(e);
-                navigate('/admin/login');
-            }
-        }
-
-        checkToken();
-    }, [navigate]);
+    useAdminAuth();
     
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
-        
+
         try {
-            const res = await axios.delete(
-                `${process.env.REACT_APP_API_URL}/distances/delete?name=${name}`);
+            const res = await api.delete('/distances/delete', {
+                params: { name }
+            });
 
             if(res.data.success) {
                 setSuccess("Дистанцію успішно видалено");

@@ -1,6 +1,7 @@
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
-import axios from "axios";
+import {useState} from "react";
+import {api} from "../../../api/axios";
+import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 export default function CreateDistance() {
     const [searchParams] = useSearchParams();
@@ -10,23 +11,7 @@ export default function CreateDistance() {
     const [success, setSuccess] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkToken = async () => {
-            try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/admin/verify`);
-
-                if(!res.data.success) {
-                    navigate('/admin/login');
-                }
-            } catch (e: any) {
-                console.error(e);
-                navigate('/admin/login');
-            }
-        }
-
-        checkToken();
-    }, [navigate]);
+    useAdminAuth();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -34,11 +19,9 @@ export default function CreateDistance() {
         setSuccess(null);
 
         try {
-            axios.defaults.withCredentials = true;
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/distances/create?id=${id}`, {
-                    name
-                });
+            const res = await api.post('/distances/create', { name }, {
+                params: { id }
+            });
 
             if(res.data.success) {
                 setSuccess("Дистанція успішно створена!");

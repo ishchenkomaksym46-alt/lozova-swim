@@ -1,6 +1,6 @@
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import axios from "axios";
+import {api} from "../../api/axios";
 
 type HeatsType = {
     id: number;
@@ -25,8 +25,9 @@ export default function Distances() {
             setError(null);
 
             try {
-                const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/distances?id=${id}`);
+                const res = await api.get('/distances', {
+                    params: { id }
+                });
 
                 if(res.data.success) {
                     setDistances(res.data.distances);
@@ -41,8 +42,7 @@ export default function Distances() {
 
         const checkToken = async () => {
             try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/admin/verify`);
+                const res = await api.get('/admin/verify');
 
                 if(res.data.success) {
                     setIsAdmin(true);
@@ -63,13 +63,15 @@ export default function Distances() {
                 {isAdmin && <nav>
                     <a href={`/admin/distances/create?id=${id}`}>Додати дистанцію</a>
                     <a href="/admin/distances/delete">Видалити дистанцію</a>
+                    <a href="/admin/distances/update">Виправити назву дистанції</a>
                 </nav>}
 
                 {distances.length === 0 && <h2>Дистанцій ще нема</h2>}
-                {distances.map((el: any) => (
+                {distances.map((el: DistancesType) => (
                     <div className="distance" key={el.id}>
                         <h2>{el.name}</h2>
                         <h3>Кількість запливів: {el.heats.length}</h3>
+                        <a href={`/heats?id=${el.id}`}>Дивитись запливи</a>
                     </div>
                 ))}
             </div>

@@ -1,35 +1,19 @@
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import axios from "axios";
+import {useState} from "react";
+import {api} from "../../api/axios";
+import {useAdminAuth} from "../../hooks/useAdminAuth";
 
 export default function AdminConsole() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkToken = async () => {
-            try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/admin/verify`);
-
-                if(!res.data.success) {
-                    navigate('/admin/login');
-                }
-            } catch (e: any) {
-                console.error(e);
-                navigate('/admin/login');
-            }
-        }
-
-        checkToken();
-    }, [navigate]);
+    useAdminAuth();
 
     async function logout() {
         setError(null);
 
         try {
-            axios.defaults.withCredentials = true;
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/admin/logout`);
+            const res = await api.post('/admin/logout');
 
             if(!res.data.success) {
                 setError(res.data.message);
@@ -49,6 +33,7 @@ export default function AdminConsole() {
             <button onClick={logout}>Вийти з акаунту</button>
             <a href="/admin/competition/create">Додати змагання</a>
             <a href="/admin/competition/delete">Видалити змагання</a>
+            <a href="/admin/competition/update">Виправити назву змагання або дату проведення</a>
             <p>{error}</p>
         </div>
     )

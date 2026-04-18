@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import {api} from "../../api/axios";
 
 type DistancesType = {
     id: number,
@@ -20,8 +20,7 @@ export default function MainPage() {
     useEffect(() => {
         const getCompetitions = async () => {
             try {
-                const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/competitions`);
+                const res = await api.get('/competitions');
 
                 if(res.data.success) {
                     setCompetitions(res.data.data);
@@ -42,7 +41,7 @@ export default function MainPage() {
             <h1>Плавання Лозової</h1>
             <hr />
             <div className="competitions">
-                {competitions.map((el: any) => (
+                {competitions.map((el: CompetitionType) => (
                     <div className="competition" key={el.id}>
                         <h2>{el.name}</h2>
                         <h3>Дата проведення: {el.date}</h3>

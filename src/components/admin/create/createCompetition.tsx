@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
-import axios from "axios";
+import {useState} from "react";
+import {api} from "../../../api/axios";
 import {useNavigate} from "react-router-dom";
+import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 export default function CreateCompetition() {
     const [name, setName] = useState<string>("");
@@ -8,30 +9,14 @@ export default function CreateCompetition() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkToken = async () => {
-            try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/admin/verify`);
-
-                if(!res.data.success) {
-                    navigate('/admin/login');
-                }
-            } catch (e: any) {
-                console.error(e);
-                navigate('/admin/login');
-            }
-        }
-
-        checkToken();
-    }, [navigate]);
+    useAdminAuth();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         setError(null);
         e.preventDefault();
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/competitions/create`, {
+            const res = await api.post('/competitions/create', {
                 name,
                 date
             });

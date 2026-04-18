@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import axios from "axios";
+import {api} from "../../api/axios";
 
 export default function AdminLogin() {
     const [password, setPassword] = useState<string>("");
@@ -12,11 +12,7 @@ export default function AdminLogin() {
         setError(null);
 
         try {
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/admin/login`,
-                { password },
-                { withCredentials: true }
-            );
+            const res = await api.post('/admin/login', { password });
 
             if(res.data.success) {
                 navigate('/admin');
