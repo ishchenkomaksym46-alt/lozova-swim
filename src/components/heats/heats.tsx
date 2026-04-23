@@ -60,15 +60,18 @@ export default function Heats() {
         checkToken();
     }, [id]);
 
-    async function deleteHeat(id: number) {
+    async function deleteHeat(heatNumber: number) {
         setError(null);
 
         try {
             const res = await api.delete(`${process.env.REACT_APP_API_URL}/heats/delete`,
-                {params: { id }});
+                { params: {
+                    heatNumber: heatNumber,
+                    distanceId: id
+                } });
 
-            if(res.data.success) {
-                setHeats(heats.filter(heat => heat.id !== id).sort((a, b) => a.heatNumber - b.heatNumber));
+            if(res.status === 200) {
+                setHeats(heats.filter(heat => heat.heatNumber !== heatNumber).sort((a, b) => a.heatNumber - b.heatNumber));
             } else {
                 setError(res.data.message);
             }
@@ -92,7 +95,10 @@ export default function Heats() {
                 {heats.map((el: HeatType)=> (
                     <div key={el.id} className="heat">
                         {isAdmin && (
-                            <button onClick={() => deleteHeat(el.id)}>Видалити цей заплив</button>
+                            <nav>
+                                <button onClick={() => deleteHeat(el.heatNumber)}>Видалити цей заплив</button>
+                                <a href={`/admin/heats/update?heatNumber=${el.heatNumber}&distanceId=${id}`}>Оновити цей заплив</a>
+                            </nav>
                         )}
                         <h2>Номер запливу: {el.heatNumber}</h2>
                         <div className="participants">

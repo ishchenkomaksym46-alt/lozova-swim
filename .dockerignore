@@ -1,0 +1,9 @@
+node_modules
+.env.development
+.env.production
+.git
+.gitignore
+*.md
+dist
+build
+.cache

@@ -12,6 +12,7 @@ import UpdateCompetitionName from "./components/admin/update/updateCompetitionNa
 import UpdateDistanceName from "./components/admin/update/updateDistanceName";
 import Heats from "./components/heats/heats";
 import CreateHeat from "./components/admin/create/createHeat";
+import UpdateHeat from "./components/admin/update/updateHeat";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -29,6 +30,7 @@ root.render(
             <Route path="/admin/distances/update" element={<UpdateDistanceName />} />
             <Route path="/heats" element={<Heats />} />
             <Route path="/admin/heats/create" element={<CreateHeat />} />
+            <Route path="/admin/heats/update" element={<UpdateHeat />} />
         </Routes>
     </BrowserRouter>
 )

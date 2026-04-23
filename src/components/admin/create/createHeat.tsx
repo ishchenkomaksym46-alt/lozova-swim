@@ -1,29 +1,56 @@
 import {useSearchParams} from "react-router-dom";
 import {useAdminAuth} from "../../../hooks/useAdminAuth";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {api} from "../../../api/axios";
 
 interface Participant {
     name: string;
     surname: string;
     declared_time: string;
-    lane: number;
 }
 
 export default function CreateHeat() {
     const [searchParam] = useSearchParams();
     const id = searchParam.get("id");
     const [participants, setParticipants] = useState<Participant[]>([
-        { name: "", surname: "", declared_time: "", lane: 0 }
+        { name: "", surname: "", declared_time: "" }
     ]);
     const [heatNumber, setHeatNumber] = useState<number>(1);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string| null>(null);
+    const [laneCount, setLaneCount] = useState<number>(6);
 
     useAdminAuth();
 
+    useEffect(() => {
+        const fetchLaneCount = async () => {
+            try {
+                const res = await api.get(`${process.env.REACT_APP_API_URL}/distances/lane-count`, {
+                    params: { id }
+                });
+                if (res.data.success) {
+                    setLaneCount(res.data.laneCount);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+        fetchLaneCount();
+    }, [id]);
+
+    function validateTimeFormat(time: string): boolean {
+        // Формат мм:сс.мс (миллисекунды 00-99)
+        const timeRegex = /^\d{1,2}:[0-5]\d\.\d{2}$/;
+        return timeRegex.test(time);
+    }
+
     function addParticipant() {
-        setParticipants([...participants, { name: "", surname: "", declared_time: "", lane: 0 }]);
+        if (participants.length >= laneCount) {
+            setError(`Неможливо додати більше ${laneCount} участників (кількість доріжок)`);
+            return;
+        }
+        setParticipants([...participants, { name: "", surname: "", declared_time: "" }]);
+        setError(null);
     }
 
     function removeParticipant(index: number) {
@@ -41,6 +68,15 @@ export default function CreateHeat() {
         setError(null);
         setSuccess(null);
 
+        // Валидация формата времени
+        for (let i = 0; i < participants.length; i++) {
+            const participant = participants[i];
+            if (participant && !validateTimeFormat(participant.declared_time)) {
+                setError(`Неправильний формат часу для участника ${i + 1}. Використовуйте формат мм:сс.мс`);
+                return;
+            }
+        }
+
         try {
             const res = await api.post(
                 `${process.env.REACT_APP_API_URL}/heats/create`,
@@ -50,7 +86,7 @@ export default function CreateHeat() {
 
             if(res.data.success) {
                 setSuccess("Заплив успішно створено");
-                setParticipants([{ name: "", surname: "", declared_time: "", lane: 0 }]);
+                setParticipants([{ name: "", surname: "", declared_time: "" }]);
             } else {
                 setError(res.data.message);
             }
@@ -69,7 +105,7 @@ export default function CreateHeat() {
                        onChange={(e) => setHeatNumber(Number(e.target.value))}
                        placeholder="Номер запливу"
                        required/>
-                <h3>Додати участників</h3>
+                <h3>Додати участників (максимум {laneCount})</h3>
                 {participants.map((participant, index) => (
                     <div key={index} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
                         <h4>Участник {index + 1}</h4>
@@ -91,14 +127,9 @@ export default function CreateHeat() {
                             type="text"
                             value={participant.declared_time}
                             onChange={(e) => updateParticipant(index, "declared_time", e.target.value)}
-                            placeholder="Заявлений час"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={participant.lane}
-                            onChange={(e) => updateParticipant(index, "lane", Number(e.target.value))}
-                            placeholder="Доріжка"
+                            placeholder="Заявлений час (мм:сс.мс)"
+                            pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
+                            title="Формат: мм:сс.мс (наприклад 1:43.89)"
                             required
                         />
                         {participants.length > 1 && (

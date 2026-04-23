@@ -6,6 +6,7 @@ import {useAdminAuth} from "../../../hooks/useAdminAuth";
 export default function CreateCompetition() {
     const [name, setName] = useState<string>("");
     const [date, setDate] = useState<string>("");
+    const [laneCount, setLaneCount] = useState<number>(6);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -18,7 +19,8 @@ export default function CreateCompetition() {
         try {
             const res = await api.post('/competitions/create', {
                 name,
-                date
+                date,
+                laneCount
             });
 
             if(res.data.success) {
@@ -55,6 +57,15 @@ export default function CreateCompetition() {
                     placeholder="Дата проведення: "
                     onChange={(e) => setDate(e.target.value)}
                     minLength={3} required/>
+                <input
+                    type="number"
+                    id="laneCount"
+                    placeholder="Кількість доріжок"
+                    value={laneCount}
+                    onChange={(e) => setLaneCount(Number(e.target.value))}
+                    min={1}
+                    max={10}
+                    required/>
                 <button>Створити</button>
             </form>
             <p>{error}</p>
