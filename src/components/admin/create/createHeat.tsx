@@ -2,6 +2,8 @@ import {useSearchParams} from "react-router-dom";
 import {useAdminAuth} from "../../../hooks/useAdminAuth";
 import {useEffect, useState} from "react";
 import {api} from "../../../api/axios";
+import "../../../styles/global.css";
+import "../../../styles/admin.css";
 
 interface Participant {
     name: string;
@@ -17,7 +19,7 @@ export default function CreateHeat() {
     ]);
     const [heatNumber, setHeatNumber] = useState<number>(1);
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string| null>(null);
+    const [success, setSuccess] = useState<boolean>(false);
     const [laneCount, setLaneCount] = useState<number>(6);
 
     useAdminAuth();
@@ -28,7 +30,7 @@ export default function CreateHeat() {
                 const res = await api.get(`${process.env.REACT_APP_API_URL}/distances/lane-count`, {
                     params: { id }
                 });
-                if (res.data.success) {
+                if (res.status === 200) {
                     setLaneCount(res.data.laneCount);
                 }
             } catch (e) {
@@ -54,6 +56,9 @@ export default function CreateHeat() {
     }
 
     function removeParticipant(index: number) {
+        if (participants.length > 1 && !window.confirm(`Видалити учасника ${index + 1}?`)) {
+            return;
+        }
         setParticipants(participants.filter((_, i) => i !== index));
     }
 
@@ -66,7 +71,7 @@ export default function CreateHeat() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
-        setSuccess(null);
+        setSuccess(false);
 
         // Валидация формата времени
         for (let i = 0; i < participants.length; i++) {
@@ -84,66 +89,103 @@ export default function CreateHeat() {
                 { params: { id } }
             );
 
-            if(res.data.success) {
-                setSuccess("Заплив успішно створено");
+            if(res.status === 200) {
+                setSuccess(true);
                 setParticipants([{ name: "", surname: "", declared_time: "" }]);
+                setHeatNumber(heatNumber + 1);
             } else {
                 setError(res.data.message);
             }
         } catch (e: any) {
             console.error(e);
-            setError("Невідома помилка");
+            setError(e.response?.data?.message || e.message || "Невідома помилка");
         }
     }
 
     return (
-        <div>
-            <a href="/admin">Повернутися до консолі</a>
-            <h2>Додати запливи</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="number" name="heatNumber" id="heatNumber"
-                       onChange={(e) => setHeatNumber(Number(e.target.value))}
-                       placeholder="Номер запливу"
-                       required/>
-                <h3>Додати участників (максимум {laneCount})</h3>
-                {participants.map((participant, index) => (
-                    <div key={index} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
-                        <h4>Участник {index + 1}</h4>
-                        <input
-                            type="text"
-                            value={participant.name}
-                            onChange={(e) => updateParticipant(index, "name", e.target.value)}
-                            placeholder="Ім'я спортсмена"
-                            required
-                        />
-                        <input
-                            type="text"
-                            value={participant.surname}
-                            onChange={(e) => updateParticipant(index, "surname", e.target.value)}
-                            placeholder="Фамілія спортсмена"
-                            required
-                        />
-                        <input
-                            type="text"
-                            value={participant.declared_time}
-                            onChange={(e) => updateParticipant(index, "declared_time", e.target.value)}
-                            placeholder="Заявлений час (мм:сс.мс)"
-                            pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
-                            title="Формат: мм:сс.мс (наприклад 1:43.89)"
-                            required
-                        />
-                        {participants.length > 1 && (
-                            <button type="button" onClick={() => removeParticipant(index)}>Видалити</button>
-                        )}
-                    </div>
-                ))}
+        <div className="admin-page">
+            <div className="container">
+                <a href="/admin" className="back-link">Повернутися до консолі</a>
 
-                <button type="button" onClick={addParticipant}>+ Додати участника</button>
-                <br />
-                <button type="submit">Створити заплив</button>
-            </form>
-            <p className="success">{success}</p>
-            <p>{error}</p>
+                <div className="admin-header">
+                    <h1 className="form-title">Додати заплив</h1>
+                </div>
+
+                <div className="form-container">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="heatNumber" className="form-label">Номер запливу</label>
+                            <input
+                                type="number"
+                                name="heatNumber"
+                                id="heatNumber"
+                                className="form-input"
+                                value={heatNumber}
+                                onChange={(e) => setHeatNumber(Number(e.target.value))}
+                                placeholder="1"
+                                required/>
+                        </div>
+
+                        <div className="participant-selector">
+                            <h3>Учасники (максимум {laneCount})</h3>
+                            {participants.map((participant, index) => (
+                                <div key={index} className="heat-group">
+                                    <h4>Учасник {index + 1}</h4>
+                                    <div className="form-group">
+                                        <label className="form-label">Ім'я</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={participant.name}
+                                            onChange={(e) => updateParticipant(index, "name", e.target.value)}
+                                            placeholder="Введіть ім'я"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Прізвище</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={participant.surname}
+                                            onChange={(e) => updateParticipant(index, "surname", e.target.value)}
+                                            placeholder="Введіть прізвище"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Заявлений час</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={participant.declared_time}
+                                            onChange={(e) => updateParticipant(index, "declared_time", e.target.value)}
+                                            placeholder="Формат: мм:сс.мс (наприклад 1:43.89)"
+                                            pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
+                                            title="Формат: мм:сс.мс (наприклад 1:43.89)"
+                                            required
+                                        />
+                                    </div>
+                                    {participants.length > 1 && (
+                                        <button type="button" className="btn-delete" onClick={() => removeParticipant(index)}>
+                                            Видалити учасника
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+
+                            <button type="button" className="form-button" style={{marginTop: '1rem', background: 'var(--success)'}} onClick={addParticipant}>
+                                + Додати учасника
+                            </button>
+                        </div>
+
+                        <button type="submit" className="form-button">Створити заплив</button>
+                    </form>
+
+                    {success && <p className="form-message success">Заплив успішно створено!</p>}
+                    {error && <p className="form-message error">{error}</p>}
+                </div>
+            </div>
         </div>
     )
 }
