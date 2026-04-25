@@ -1,0 +1,248 @@
+/* Стилі для головної сторінки */
+.main-page {
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.page-header {
+    text-align: center;
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--water-light) 0%, transparent 70%);
+    opacity: 0.3;
+    z-index: -1;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.1);
+        opacity: 0.5;
+    }
+}
+
+.page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--water-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(11, 61, 145, 0.1);
+}
+
+.page-subtitle {
+    font-size: 1.25rem;
+    color: var(--gray-600);
+    font-weight: 300;
+}
+
+.competitions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.competition-card {
+    background: var(--white);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-slow);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.competition-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--water-medium), var(--water-light), var(--water-foam));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.competition-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-xl);
+}
+
+.competition-card:hover::before {
+    height: 8px;
+}
+
+.competition-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--water-deep);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.competition-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--water-splash), var(--water-foam));
+    color: var(--water-deep);
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin-bottom: 1rem;
+}
+
+.competition-date::before {
+    content: '📅';
+    font-size: 1.125rem;
+}
+
+.competition-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--gray-100);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1.5rem;
+}
+
+.competition-info::before {
+    content: '🏊';
+    font-size: 1.5rem;
+}
+
+.competition-info-text {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.competition-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.competition-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: linear-gradient(135deg, var(--water-medium), var(--water-light));
+    color: var(--white);
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.competition-link::after {
+    content: '→';
+    font-size: 1.25rem;
+    transition: transform var(--transition-base);
+}
+
+.competition-link:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
+}
+
+.competition-link:hover::after {
+    transform: translateX(4px);
+}
+
+.competition-link-secondary {
+    background: var(--white);
+    color: var(--water-medium);
+    border: 2px solid var(--water-medium);
+}
+
+.competition-link-secondary:hover {
+    background: var(--water-splash);
+}
+
+.error-message {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.05));
+    border-left: 4px solid var(--danger);
+    border-radius: var(--border-radius-md);
+    color: var(--danger);
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .competitions-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .competition-card {
+        padding: 1.5rem;
+    }
+
+    .competition-name {
+        font-size: 1.75rem;
+    }
+
+    .page-header {
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .competition-card {
+        padding: 1.25rem;
+    }
+
+    .competition-name {
+        font-size: 1.5rem;
+    }
+
+    .competition-actions {
+        gap: 0.5rem;
+    }
+
+    .competition-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9375rem;
+    }
+}
