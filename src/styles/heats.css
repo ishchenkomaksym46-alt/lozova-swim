@@ -1,0 +1,194 @@
+/* Стилі для сторінки запливів */
+.heats-page {
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.heats-header {
+    margin-bottom: 2rem;
+}
+
+.heats-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.heat-card {
+    background: var(--white);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.heat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--water-medium), var(--water-light));
+}
+
+.heat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--water-deep);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--water-light);
+}
+
+.heat-admin-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-delete,
+.btn-edit {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all var(--transition-base);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-delete {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+}
+
+.btn-edit {
+    background: var(--water-medium);
+    color: var(--white);
+    display: inline-block;
+}
+
+.btn-edit:hover {
+    transform: translateY(-2px);
+}
+
+.participants-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.participant-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.05), rgba(66, 165, 245, 0.05));
+    border-radius: var(--border-radius-md);
+    border-left: 4px solid var(--water-medium);
+    transition: all var(--transition-base);
+}
+
+.participant-card:hover {
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.1), rgba(66, 165, 245, 0.1));
+    border-left-color: var(--water-deep);
+    transform: translateX(4px);
+}
+
+.participant-lane {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--water-medium), var(--water-deep));
+    color: var(--white);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-align: center;
+    flex-shrink: 0;
+    padding: 15px;
+}
+
+.participant-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.participant-name {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.participant-times {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.participant-times.actual {
+    font-weight: 600;
+}
+
+.time-label {
+    color: var(--text-secondary);
+}
+
+.time-value {
+    color: var(--water-deep);
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+.participant-times.actual .time-value {
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+.no-heats {
+    text-align: center;
+    padding: 3rem;
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+    .heat-card {
+        padding: 1.5rem;
+    }
+
+    .heat-number {
+        font-size: 1.5rem;
+    }
+
+    .participant-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .participant-lane {
+        margin: 0 auto;
+    }
+
+    .participant-times {
+        justify-content: center;
+    }
+
+    .heat-admin-actions {
+        justify-content: center;
+    }
+}

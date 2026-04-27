@@ -1,6 +1,8 @@
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {api} from "../../api/axios";
+import "../../styles/global.css";
+import "../../styles/distances.css";
 
 type HeatsType = {
     id: number;
@@ -29,14 +31,14 @@ export default function Distances() {
                     params: { id }
                 });
 
-                if(res.data.success) {
+                if(res.status === 200) {
                     setDistances(res.data.distances);
                 } else {
                     setError(res.data.message);
                 }
-            } catch (e) {
+            } catch (e: any) {
                 console.error(e);
-                setError("Невідома помилка");
+                setError(e.response?.data?.message || e.message || "Невідома помилка");
             }
         }
 
@@ -44,7 +46,7 @@ export default function Distances() {
             try {
                 const res = await api.get('/admin/verify');
 
-                if(res.data.success) {
+                if(res.status === 200) {
                     setIsAdmin(true);
                 }
             } catch (e: any) {
@@ -57,25 +59,50 @@ export default function Distances() {
     }, [id, navigate]);
 
     return(
-        <div>
-            <div className="distances">
-                <a href="/">Назад</a>
-                {isAdmin && <nav>
-                    <a href={`/admin/distances/create?id=${id}`}>Додати дистанцію</a>
-                    <a href="/admin/distances/delete">Видалити дистанцію</a>
-                    <a href="/admin/distances/update">Виправити назву дистанції</a>
-                </nav>}
+        <div className="distances-page">
+            <div className="container">
+                <a href="/" className="back-link">Назад</a>
 
-                {distances.length === 0 && <h2>Дистанцій ще нема</h2>}
-                {distances.map((el: DistancesType) => (
-                    <div className="distance" key={el.id}>
-                        <h2>{el.name}</h2>
-                        <h3>Кількість запливів: {el.heats.length}</h3>
-                        <a href={`/heats?id=${el.id}`}>Дивитись запливи</a>
+                <div className="distances-header">
+                    <h1>Дистанції</h1>
+                    {isAdmin && (
+                        <nav className="admin-nav">
+                            <a href={`/admin/distances/create?id=${id}`}>Додати дистанцію</a>
+                            <a href="/admin/distances/delete">Видалити дистанцію</a>
+                            <a href="/admin/distances/update">Виправити назву</a>
+                        </nav>
+                    )}
+                </div>
+
+                <a href={`/swimmers?id=${id}`} className="btn btn-secondary mb-3">Спортсмени</a>
+
+                {distances.length === 0 && (
+                    <div className="no-distances">
+                        <h2>Дистанцій ще нема</h2>
                     </div>
-                ))}
+                )}
+
+                <div className="distances-grid">
+                    {distances.map((el: DistancesType) => (
+                        <div className="distance-card" key={el.id}>
+                            <h2 className="distance-name">{el.name}</h2>
+                            <div className="distance-info">
+                                Кількість запливів: {el.heats.length}
+                            </div>
+                            <div className="distance-links">
+                                <a href={`/heats?id=${el.id}`} className="distance-link">
+                                    Дивитись запливи
+                                </a>
+                                <a href={`/results?id=${el.id}&competitionId=${id}`} className="distance-link distance-link-secondary">
+                                    Результати
+                                </a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {error && <p className="error-message">{error}</p>}
             </div>
-            <p>{error}</p>
         </div>
     )
 }

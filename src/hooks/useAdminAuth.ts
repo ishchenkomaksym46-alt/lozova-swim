@@ -10,7 +10,7 @@ export function useAdminAuth() {
             try {
                 const res = await api.get('/admin/verify');
 
-                if (!res.data.success) {
+                if (res.status !== 200) {
                     navigate('/admin/login');
                 }
             } catch (e: any) {
