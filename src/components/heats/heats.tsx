@@ -1,8 +1,6 @@
 import {useEffect, useState} from "react";
 import {api} from "../../api/axios";
 import {useSearchParams} from "react-router-dom";
-import "../../styles/global.css";
-import "../../styles/heats.css";
 
 type ParticipantsType = {
     id: number,
@@ -35,14 +33,14 @@ export default function Heats() {
                     params: { id }
                 });
 
-                if(res.status === 200) {
+                if(res.data.success) {
                     setHeats(res.data.data);
                 } else {
                     setError(res.data.message);
                 }
-            } catch (e: any) {
+            } catch (e) {
                 console.error(e);
-                setError(e.response?.data?.message || e.message || "Невідома помилка");
+                setError("Невідома помилка");
             }
         }
 
@@ -50,7 +48,7 @@ export default function Heats() {
             try {
                 const res = await api.get('/admin/verify');
 
-                if(res.status === 200) {
+                if(res.data.success) {
                     setIsAdmin(true);
                 }
             } catch (e: any) {
@@ -63,10 +61,6 @@ export default function Heats() {
     }, [id]);
 
     async function deleteHeat(heatNumber: number) {
-        if (!window.confirm(`Ви впевнені, що хочете видалити заплив №${heatNumber}?`)) {
-            return;
-        }
-
         setError(null);
 
         try {
@@ -81,70 +75,44 @@ export default function Heats() {
             } else {
                 setError(res.data.message);
             }
-        } catch (e: any) {
+        } catch (e) {
             console.error(e);
-            setError(e.response?.data?.message || e.message || "Невідома помилка");
+            setError("Невідома помилка");
         }
     }
 
     return (
-        <div className="heats-page">
-            <div className="container">
-                <div className="heats-header">
-                    <h1 className="heats-title">Запливи</h1>
-                    {isAdmin && (
-                        <nav className="admin-nav">
-                            <a href={`/admin/heats/create?id=${id}`}>Створити запливи</a>
-                        </nav>
-                    )}
-                </div>
-
-                {heats.length === 0 && (
-                    <div className="no-heats">
-                        <p>Немає запливів для цієї дистанції</p>
-                    </div>
-                )}
-
-                <div className="heats-grid">
-                    {heats.map((el: HeatType)=> (
-                        <div key={el.id} className="heat-card">
-                            {isAdmin && (
-                                <div className="heat-admin-actions">
-                                    <button onClick={() => deleteHeat(el.heatNumber)} className="btn-delete">
-                                        Видалити
-                                    </button>
-                                    <a href={`/admin/heats/update?heatNumber=${el.heatNumber}&distanceId=${id}`} className="btn-edit">
-                                        Оновити
-                                    </a>
+        <div>
+            <a href="/distances">Назад</a>
+            {isAdmin && (
+                <nav>
+                    <a href={`/admin/heats/create?id=${id}`}>Створити запливи</a>
+                </nav>
+            )}
+            <h1>Запливи</h1>
+            <div className="heats">
+                {heats.length === 0 && <p>Немає запливів для цієї дистанції</p>}
+                {heats.map((el: HeatType)=> (
+                    <div key={el.id} className="heat">
+                        {isAdmin && (
+                            <nav>
+                                <button onClick={() => deleteHeat(el.heatNumber)}>Видалити цей заплив</button>
+                                <a href={`/admin/heats/update?heatNumber=${el.heatNumber}&distanceId=${id}`}>Оновити цей заплив</a>
+                            </nav>
+                        )}
+                        <h2>Номер запливу: {el.heatNumber}</h2>
+                        <div className="participants">
+                            {el.participants.map((el: ParticipantsType) => (
+                                <div className="participant" key={el.id}>
+                                    <h3>{el.lane} {el.name} {el.surname} </h3>
+                                    <h4>{el.declaredTime} {el.actualTime}</h4>
                                 </div>
-                            )}
-                            <h2 className="heat-number">Заплив №{el.heatNumber}</h2>
-                            <div className="participants-list">
-                                {el.participants.sort((a, b) => a.lane - b.lane).map((participant: ParticipantsType) => (
-                                    <div className="participant-card" key={participant.id}>
-                                        <div className="participant-lane">Доріжка {participant.lane}</div>
-                                        <div className="participant-info">
-                                            <h3 className="participant-name">{participant.surname} {participant.name}</h3>
-                                            <div className="participant-times">
-                                                <span className="time-label">Заявлений:</span>
-                                                <span className="time-value">{participant.declaredTime}</span>
-                                            </div>
-                                            {participant.actualTime !== "Справжнього часу це нема" && (
-                                                <div className="participant-times actual">
-                                                    <span className="time-label">Фактичний:</span>
-                                                    <span className="time-value">{participant.actualTime}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-
-                {error && <p className="error-message">{error}</p>}
+                    </div>
+                ))}
             </div>
+            <p>{error}</p>
         </div>
     )
 }
