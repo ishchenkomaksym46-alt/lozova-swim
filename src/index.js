@@ -13,14 +13,6 @@ import UpdateDistanceName from "./components/admin/update/updateDistanceName";
 import Heats from "./components/heats/heats";
 import CreateHeat from "./components/admin/create/createHeat";
 import UpdateHeat from "./components/admin/update/updateHeat";
-import CreateSwimmer from "./components/admin/create/createSwimmer";
-import UpdateSwimmer from "./components/admin/update/updateSwimmer";
-import DeleteSwimmer from "./components/admin/delete/deleteSwimmer";
-import Swimmers from "./components/swimmers/swimmers";
-import AddResult from "./components/admin/results/addResult";
-import Results from "./components/results/results";
-import UploadProtocol from "./components/admin/protocols/uploadProtocol";
-import ViewProtocol from "./components/protocols/viewProtocol";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -39,14 +31,6 @@ root.render(
             <Route path="/heats" element={<Heats />} />
             <Route path="/admin/heats/create" element={<CreateHeat />} />
             <Route path="/admin/heats/update" element={<UpdateHeat />} />
-            <Route path="/admin/swimmer/create" element={<CreateSwimmer />} />
-            <Route path="/admin/swimmer/update" element={<UpdateSwimmer />} />
-            <Route path="/admin/swimmer/delete" element={<DeleteSwimmer />} />
-            <Route path="/swimmers" element={<Swimmers />} />
-            <Route path="/admin/results/add" element={<AddResult />} />
-            <Route path="/results" element={<Results />} />
-            <Route path="/admin/protocols/upload" element={<UploadProtocol />} />
-            <Route path="/protocols" element={<ViewProtocol />} />
         </Routes>
     </BrowserRouter>
 )

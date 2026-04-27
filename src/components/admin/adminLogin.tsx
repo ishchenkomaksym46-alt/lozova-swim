@@ -1,8 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {api} from "../../api/axios";
-import "../../styles/global.css";
-import "../../styles/admin.css";
 
 export default function AdminLogin() {
     const [password, setPassword] = useState<string>("");
@@ -16,7 +14,7 @@ export default function AdminLogin() {
         try {
             const res = await api.post('/admin/login', { password });
 
-            if(res.status === 200) {
+            if(res.data.success) {
                 navigate('/admin');
             } else {
                 setError(res.data.message || "Неправильний пароль!");
@@ -29,30 +27,18 @@ export default function AdminLogin() {
     }
 
     return(
-        <div className="admin-page">
-            <div className="container">
-                <div className="admin-header">
-                    <h1 className="admin-title">Вхід в адмін панель</h1>
-                </div>
-
-                <div className="form-container">
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="password" className="form-label">Пароль</label>
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                className="form-input"
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Введіть пароль"
-                                required/>
-                        </div>
-                        <button className="form-button">Зайти в акаунт</button>
-                    </form>
-                    {error && <p className="form-message error">{error}</p>}
-                </div>
-            </div>
+        <div>
+            <h1>Вхід в адмін панель</h1>
+            <form onSubmit={handleSubmit}>
+                <input type="password"
+                       name="password"
+                       id="password"
+                       onChange={(e) => setPassword(e.target.value)}
+                       placeholder="Пароль: "
+                       required/>
+                <button>Зайти в акаунт</button>
+            </form>
+            <p>{error}</p>
         </div>
     )
 }
