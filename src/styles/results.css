@@ -1,0 +1,241 @@
+/* Стилі для сторінки результатів */
+.results-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.results-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.results-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--water-medium), var(--water-light));
+    border-radius: 2px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--white);
+    color: var(--water-medium);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.back-link::before {
+    content: '←';
+    font-size: 1.25rem;
+}
+
+.back-link:hover {
+    transform: translateX(-4px);
+    box-shadow: var(--shadow-md);
+    background: var(--water-medium);
+    color: var(--white);
+}
+
+.heat-section {
+    background: var(--white);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.heat-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--water-medium), var(--water-light));
+}
+
+.heat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--water-deep);
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--water-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.results-table thead {
+    background: linear-gradient(135deg, var(--water-deep), var(--water-medium));
+}
+
+.results-table thead th {
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-transform: uppercase;
+}
+
+.results-table tbody tr {
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.results-table tbody tr:nth-child(odd) {
+    background: var(--gray-100);
+}
+
+.results-table tbody tr:hover {
+    background: var(--water-splash);
+    transform: scale(1.01);
+    box-shadow: var(--shadow-sm);
+}
+
+.results-table tbody td {
+    padding: 1.25rem 1rem;
+    color: var(--gray-800);
+    border-bottom: 1px solid var(--gray-200);
+    font-weight: 500;
+}
+
+.results-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Медальні місця з іконками */
+.results-table tbody tr:nth-child(1) {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.05));
+}
+
+.results-table tbody tr:nth-child(1) td:first-child {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.results-table tbody tr:nth-child(1) td:first-child::before {
+    content: '🥇';
+    position: absolute;
+    left: -0.5rem;
+    font-size: 1.25rem;
+}
+
+.results-table tbody tr:nth-child(2) {
+    background: linear-gradient(90deg, rgba(192, 192, 192, 0.2), rgba(192, 192, 192, 0.05));
+}
+
+.results-table tbody tr:nth-child(2) td:first-child {
+    color: var(--silver);
+    font-weight: 700;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.results-table tbody tr:nth-child(2) td:first-child::before {
+    content: '🥈';
+    position: absolute;
+    left: -0.5rem;
+    font-size: 1.25rem;
+}
+
+.results-table tbody tr:nth-child(3) {
+    background: linear-gradient(90deg, rgba(205, 127, 50, 0.2), rgba(205, 127, 50, 0.05));
+}
+
+.results-table tbody tr:nth-child(3) td:first-child {
+    color: var(--bronze);
+    font-weight: 700;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.results-table tbody tr:nth-child(3) td:first-child::before {
+    content: '🥉';
+    position: absolute;
+    left: -0.5rem;
+    font-size: 1.25rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: var(--gray-500);
+    font-size: 1.125rem;
+}
+
+/* Адаптивність для мобільних */
+@media (max-width: 768px) {
+    .results-container {
+        padding: 1rem;
+    }
+
+    .heat-section {
+        padding: 1.5rem 1rem;
+        border-radius: var(--border-radius-lg);
+    }
+
+    .heat-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .results-table {
+        font-size: 0.875rem;
+    }
+
+    .results-table thead th,
+    .results-table tbody td {
+        padding: 0.875rem 0.5rem;
+    }
+
+    .results-table thead th {
+        font-size: 0.9375rem;
+    }
+
+    /* Приховуємо деякі колонки на мобільних */
+    .results-table th:nth-child(4),
+    .results-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .results-table {
+        font-size: 0.8125rem;
+    }
+
+    .results-table thead th,
+    .results-table tbody td {
+        padding: 0.75rem 0.375rem;
+    }
+}

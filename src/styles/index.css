@@ -1,0 +1,8 @@
+/* Імпорт всіх стилів */
+@import './global.css';
+@import './mainPage.css';
+@import './results.css';
+@import './distances.css';
+@import './heats.css';
+@import './admin.css';
+@import './protocols.css';
