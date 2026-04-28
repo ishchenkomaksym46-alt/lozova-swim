@@ -34,9 +34,10 @@ export default function AdminConsole() {
             <a href="/admin/competition/create">Додати змагання</a>
             <a href="/admin/competition/delete">Видалити змагання</a>
             <a href="/admin/competition/update">Виправити назву змагання або дату проведення</a>
-            <a href="/admin/sportmens/create">Додати участника</a>
-            <a href="/admin/sportmens/delete">Видалити участника</a>
-            <a href="/admin/sportmens/update">Оновити участника</a>
+            <h2>Заявочний протокол та формування заплавів</h2>
+            <a href="/admin/entries/create">Створити заявку</a>
+            <a href="/admin/entries/select">Додати учасників до заявки</a>
+            <a href="/admin/seeding/generate">Автоматичне формування заплавів</a>
             <p>{error}</p>
         </div>
     )

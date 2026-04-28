@@ -13,11 +13,14 @@ import UpdateDistanceName from "./components/admin/update/updateDistanceName";
 import Heats from "./components/heats/heats";
 import CreateHeat from "./components/admin/create/createHeat";
 import UpdateHeat from "./components/admin/update/updateHeat";
+import CreateEntry from "./components/admin/create/createEntry";
+import EntryProtocol from "./components/entries/entryProtocol";
+import GenerateHeats from "./components/admin/seeding/generateHeats";
+import StartList from "./components/startList/startList";
+import AddEntryItems from "./components/admin/entries/addEntryItems";
+import SelectEntry from "./components/admin/entries/selectEntry";
 import Sportmens from "./components/sportmens/sportmens";
 import SportmenDetails from "./components/sportmens/sportmenDetails";
-import CreateSportmen from "./components/admin/create/createSportmen";
-import DeleteSportmen from "./components/admin/delete/deleteSportmen";
-import UpdateSportmen from "./components/admin/update/updateSportmen";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -36,11 +39,14 @@ root.render(
             <Route path="/heats" element={<Heats />} />
             <Route path="/admin/heats/create" element={<CreateHeat />} />
             <Route path="/admin/heats/update" element={<UpdateHeat />} />
+            <Route path="/admin/entries/create" element={<CreateEntry />} />
+            <Route path="/admin/entries/select" element={<SelectEntry />} />
+            <Route path="/admin/entries/items/add" element={<AddEntryItems />} />
+            <Route path="/entry-protocol" element={<EntryProtocol />} />
+            <Route path="/admin/seeding/generate" element={<GenerateHeats />} />
+            <Route path="/start-list" element={<StartList />} />
             <Route path="/sportmens" element={<Sportmens />} />
             <Route path="/sportmens/:id" element={<SportmenDetails />} />
-            <Route path="/admin/sportmens/create" element={<CreateSportmen />} />
-            <Route path="/admin/sportmens/delete" element={<DeleteSportmen />} />
-            <Route path="/admin/sportmens/update" element={<UpdateSportmen />} />
         </Routes>
     </BrowserRouter>
 )
