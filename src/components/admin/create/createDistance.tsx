@@ -1,4 +1,4 @@
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {useState} from "react";
 import {api} from "../../../api/axios";
 import {useAdminAuth} from "../../../hooks/useAdminAuth";
@@ -9,7 +9,6 @@ export default function CreateDistance() {
     const [error, setError] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
     const [success, setSuccess] = useState<string | null>(null);
-    const navigate = useNavigate();
 
     useAdminAuth();
 

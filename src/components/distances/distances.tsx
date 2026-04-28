@@ -19,10 +19,12 @@ export default function Distances() {
     const [distances, setDistances] = useState<DistancesType[]>([]);
     const navigate = useNavigate();
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const getDistances = async () => {
             setError(null);
+            setLoading(true);
 
             try {
                 const res = await api.get('/distances', {
@@ -37,6 +39,8 @@ export default function Distances() {
             } catch (e) {
                 console.error(e);
                 setError("Невідома помилка");
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -66,8 +70,10 @@ export default function Distances() {
                     <a href="/admin/distances/update">Виправити назву дистанції</a>
                 </nav>}
 
-                {distances.length === 0 && <h2>Дистанцій ще нема</h2>}
-                {distances.map((el: DistancesType) => (
+                {loading && <p>Завантаження...</p>}
+
+                {!loading && distances.length === 0 && <h2>Дистанцій ще нема</h2>}
+                {!loading && distances.map((el: DistancesType) => (
                     <div className="distance" key={el.id}>
                         <h2>{el.name}</h2>
                         <h3>Кількість запливів: {el.heats.length}</h3>

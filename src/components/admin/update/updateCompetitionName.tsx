@@ -17,7 +17,7 @@ export default function UpdateCompetitionName() {
         setSuccess(null);
 
         try {
-            const res = await api.patch(`${process.env.REACT_APP_API_URL}/competitions/update`, {
+            const res = await api.patch('/competitions/update', {
                 oldName,
                 name,
                 date

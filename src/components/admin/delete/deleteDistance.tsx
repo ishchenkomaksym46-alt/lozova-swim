@@ -1,13 +1,11 @@
 import {useState} from "react";
 import {api} from "../../../api/axios";
-import {useNavigate} from "react-router-dom";
 import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 export default function DeleteDistance() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
-    const navigate = useNavigate();
 
     useAdminAuth();
     

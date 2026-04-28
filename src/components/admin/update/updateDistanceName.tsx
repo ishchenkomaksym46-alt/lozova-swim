@@ -16,7 +16,7 @@ export default function UpdateDistanceName() {
         setSuccess(null);
 
         try {
-            const res = await api.patch(`${process.env.REACT_APP_API_URL}/distances/update`, {
+            const res = await api.patch('/distances/update', {
                 oldName,
                 name
             });

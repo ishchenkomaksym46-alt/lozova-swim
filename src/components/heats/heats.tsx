@@ -23,10 +23,12 @@ export default function Heats() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const getHeats = async () => {
             setError(null);
+            setLoading(true);
 
             try {
                 const res = await api.get('/heats', {
@@ -41,6 +43,8 @@ export default function Heats() {
             } catch (e) {
                 console.error(e);
                 setError("Невідома помилка");
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -62,13 +66,15 @@ export default function Heats() {
 
     async function deleteHeat(heatNumber: number) {
         setError(null);
+        setLoading(true);
 
         try {
-            const res = await api.delete(`${process.env.REACT_APP_API_URL}/heats/delete`,
-                { params: {
+            const res = await api.delete('/heats/delete', {
+                params: {
                     heatNumber: heatNumber,
                     distanceId: id
-                } });
+                }
+            });
 
             if(res.status === 200) {
                 setHeats(heats.filter(heat => heat.heatNumber !== heatNumber).sort((a, b) => a.heatNumber - b.heatNumber));
@@ -78,21 +84,24 @@ export default function Heats() {
         } catch (e) {
             console.error(e);
             setError("Невідома помилка");
+        } finally {
+            setLoading(false);
         }
     }
 
     return (
         <div>
-            <a href="/distances">Назад</a>
+            <a href="/">Головна</a>
             {isAdmin && (
                 <nav>
                     <a href={`/admin/heats/create?id=${id}`}>Створити запливи</a>
                 </nav>
             )}
             <h1>Запливи</h1>
+            {loading && <p>Завантаження...</p>}
             <div className="heats">
-                {heats.length === 0 && <p>Немає запливів для цієї дистанції</p>}
-                {heats.map((el: HeatType)=> (
+                {!loading && heats.length === 0 && <p>Немає запливів для цієї дистанції</p>}
+                {!loading && heats.map((el: HeatType)=> (
                     <div key={el.id} className="heat">
                         {isAdmin && (
                             <nav>

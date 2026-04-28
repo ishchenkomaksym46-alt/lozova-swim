@@ -16,9 +16,11 @@ type CompetitionType = {
 export default function MainPage() {
     const [competitions, setCompetitions] = useState<CompetitionType[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const getCompetitions = async () => {
+            setLoading(true);
             try {
                 const res = await api.get('/competitions');
 
@@ -30,6 +32,8 @@ export default function MainPage() {
             } catch (error: any) {
                 console.error(error);
                 setError("Unknown error");
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -39,9 +43,14 @@ export default function MainPage() {
     return (
         <div>
             <h1>Плавання Лозової</h1>
+
+            <nav>
+                <a href="/sportmens">Спортсмени</a>
+            </nav>
             <hr />
+            {loading && <p>Завантаження...</p>}
             <div className="competitions">
-                {competitions.map((el: CompetitionType) => (
+                {!loading && competitions.map((el: CompetitionType) => (
                     <div className="competition" key={el.id}>
                         <h2>{el.name}</h2>
                         <h3>Дата проведення: {el.date}</h3>

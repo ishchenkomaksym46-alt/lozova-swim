@@ -1,6 +1,5 @@
 import {useState} from "react";
 import {api} from "../../../api/axios";
-import {useNavigate} from "react-router-dom";
 import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 export default function CreateCompetition() {
@@ -8,7 +7,6 @@ export default function CreateCompetition() {
     const [date, setDate] = useState<string>("");
     const [laneCount, setLaneCount] = useState<number>(6);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
 
     useAdminAuth();
 

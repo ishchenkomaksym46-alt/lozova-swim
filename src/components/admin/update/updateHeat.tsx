@@ -88,8 +88,7 @@ export default function UpdateHeat() {
                 updateData.newHeatNumber = Number(newHeatNumber);
             }
 
-            const res = await api.put(
-                `${process.env.REACT_APP_API_URL}/heats/update`,
+            const res = await api.put('/heats/update',
                 updateData,
                 {
                     params: {

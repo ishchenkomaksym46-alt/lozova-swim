@@ -25,7 +25,7 @@ export default function CreateHeat() {
     useEffect(() => {
         const fetchLaneCount = async () => {
             try {
-                const res = await api.get(`${process.env.REACT_APP_API_URL}/distances/lane-count`, {
+                const res = await api.get('/distances/lane-count', {
                     params: { id }
                 });
                 if (res.data.success) {
@@ -78,8 +78,7 @@ export default function CreateHeat() {
         }
 
         try {
-            const res = await api.post(
-                `${process.env.REACT_APP_API_URL}/heats/create`,
+            const res = await api.post('/heats/create',
                 { participants, heatNumber },
                 { params: { id } }
             );

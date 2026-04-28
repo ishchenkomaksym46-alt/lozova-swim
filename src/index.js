@@ -13,6 +13,11 @@ import UpdateDistanceName from "./components/admin/update/updateDistanceName";
 import Heats from "./components/heats/heats";
 import CreateHeat from "./components/admin/create/createHeat";
 import UpdateHeat from "./components/admin/update/updateHeat";
+import Sportmens from "./components/sportmens/sportmens";
+import SportmenDetails from "./components/sportmens/sportmenDetails";
+import CreateSportmen from "./components/admin/create/createSportmen";
+import DeleteSportmen from "./components/admin/delete/deleteSportmen";
+import UpdateSportmen from "./components/admin/update/updateSportmen";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -31,6 +36,11 @@ root.render(
             <Route path="/heats" element={<Heats />} />
             <Route path="/admin/heats/create" element={<CreateHeat />} />
             <Route path="/admin/heats/update" element={<UpdateHeat />} />
+            <Route path="/sportmens" element={<Sportmens />} />
+            <Route path="/sportmens/:id" element={<SportmenDetails />} />
+            <Route path="/admin/sportmens/create" element={<CreateSportmen />} />
+            <Route path="/admin/sportmens/delete" element={<DeleteSportmen />} />
+            <Route path="/admin/sportmens/update" element={<UpdateSportmen />} />
         </Routes>
     </BrowserRouter>
 )
