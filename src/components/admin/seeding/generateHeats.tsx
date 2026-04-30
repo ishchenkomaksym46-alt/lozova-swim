@@ -172,7 +172,6 @@ export default function GenerateHeats() {
                             </ul>
                         </div>
                     )}
-                    <a href={`/start-list?id=${selectedEntryId}`}>Переглянути стартові протоколи</a>
                 </div>
             )}
 

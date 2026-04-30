@@ -1,0 +1,198 @@
+.container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.backLink {
+    font-size: 16px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.title {
+    margin-bottom: 10px;
+}
+
+.competitionInfo {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.competitionName {
+    margin: 0 0 5px 0;
+    font-size: 24px;
+}
+
+.competitionDate {
+    margin: 5px 0;
+    color: #666;
+}
+
+.distanceName {
+    margin: 5px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0066cc;
+}
+
+.emptyState {
+    padding: 40px;
+    text-align: center;
+    background-color: #fff3cd;
+    border-radius: 8px;
+    border: 1px solid #ffc107;
+}
+
+.emptyStateText {
+    font-size: 18px;
+    margin: 0;
+}
+
+.searchContainer {
+    margin-bottom: 30px;
+}
+
+.searchInput {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #0066cc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.resultsCount {
+    margin-top: 10px;
+    color: #666;
+}
+
+.noResults {
+    padding: 30px;
+    text-align: center;
+    background-color: #f8d7da;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+}
+
+.noResultsText {
+    font-size: 16px;
+    margin: 0;
+}
+
+.ageGroupSection {
+    margin-bottom: 50px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 2px solid #0066cc;
+    overflow: hidden;
+}
+
+.ageGroupHeader {
+    background-color: #0066cc;
+    color: white;
+    padding: 15px 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.heatSection {
+    margin-bottom: 20px;
+}
+
+.heatHeader {
+    background-color: #e7f3ff;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border-top: 1px solid #0066cc;
+    border-bottom: 1px solid #0066cc;
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.resultsTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.tableHeader {
+    background-color: #f8f9fa;
+}
+
+.tableHeaderCell {
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-weight: bold;
+}
+
+.tableHeaderCellCenter {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tableRow {
+    background-color: #f8f9fa;
+}
+
+.tableRowAlt {
+    background-color: white;
+}
+
+.tableRowHighlighted {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.placeCell {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.placeGold {
+    color: #FFD700;
+}
+
+.placeSilver {
+    color: #C0C0C0;
+}
+
+.placeBronze {
+    color: #CD7F32;
+}
+
+.placeOther {
+    color: #333;
+}
+
+.tableCell {
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+.tableCellCenter {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.timeCell {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #0066cc;
+}

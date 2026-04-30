@@ -13,6 +13,11 @@ type ParticipationType = {
             name: string;
         }
     }
+    results: Array<{
+        time: string;
+        place: number;
+        placeInHeat: number;
+    }>;
 }
 
 type SwimmerDetailsType = {
@@ -92,6 +97,19 @@ export default function SportmenDetails() {
                                 <p>Заплив/Доріжка: {participation.heat.heatNumber}/{participation.lane}</p>
                                 <p>Заявлений час: {participation.declaredTime}</p>
                                 <p>Фактичний час: {participation.actualTime}</p>
+
+                                {participation.results.length > 0 && (
+                                    <div className="results">
+                                        <h4>Результати:</h4>
+                                        {participation.results.map((result, idx) => (
+                                            <div key={idx}>
+                                                <p><strong>Час:</strong> {result.time}</p>
+                                                <p><strong>Місце в запливі:</strong> {result.placeInHeat}</p>
+                                                <p><strong>Загальне місце:</strong> {result.place}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

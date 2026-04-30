@@ -93,26 +93,26 @@ export default function EntryProtocol() {
                     {Object.keys(groupedItems).map((ageGroup) => (
                         <div key={ageGroup} style={{ marginBottom: "30px" }}>
                             <h3>Вікова група: {ageGroup}</h3>
-                            <table border={1} cellPadding={10} style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
                                 <thead>
                                     <tr>
-                                        <th>№</th>
-                                        <th>Ім'я</th>
-                                        <th>Прізвище</th>
-                                        <th>Рік народження</th>
-                                        <th>Заявлений час</th>
-                                        <th>Заявка</th>
+                                        <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>№</th>
+                                        <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Ім'я</th>
+                                        <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Прізвище</th>
+                                        <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Рік народження</th>
+                                        <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Заявлений час</th>
+                                        <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Заявка</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {groupedItems[ageGroup]?.map((item, index) => (
                                         <tr key={item.id}>
-                                            <td>{index + 1}</td>
-                                            <td>{item.name}</td>
-                                            <td>{item.surname}</td>
-                                            <td>{item.birthYear}</td>
-                                            <td>{item.seedTime}</td>
-                                            <td>{item.entry.name}</td>
+                                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>{index + 1}</td>
+                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.name}</td>
+                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.surname}</td>
+                                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>{item.birthYear}</td>
+                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.seedTime}</td>
+                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.entry.name}</td>
                                         </tr>
                                     ))}
                                 </tbody>

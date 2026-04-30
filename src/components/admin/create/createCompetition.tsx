@@ -13,13 +13,20 @@ const DEFAULT_BIRTH_YEAR_GROUPS = [
     `${currentYear - 19} і старше`
 ];
 
+type CustomGroupType = 'range' | 'older' | 'younger' | 'single';
+
 export default function CreateCompetition() {
     const [name, setName] = useState<string>("");
     const [date, setDate] = useState<string>("");
     const [laneCount, setLaneCount] = useState<number>(6);
     const [selectedAgeGroups, setSelectedAgeGroups] = useState<string[]>(DEFAULT_BIRTH_YEAR_GROUPS);
-    const [customAgeGroup, setCustomAgeGroup] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
+
+    // Custom group builder state
+    const [customGroupType, setCustomGroupType] = useState<CustomGroupType>('range');
+    const [customYear1, setCustomYear1] = useState<string>("");
+    const [customYear2, setCustomYear2] = useState<string>("");
+    const [customSingleYear, setCustomSingleYear] = useState<string>("");
 
     useAdminAuth();
 
@@ -32,10 +39,40 @@ export default function CreateCompetition() {
     }
 
     function addCustomAgeGroup() {
-        const trimmed = customAgeGroup.trim();
-        if (trimmed && !selectedAgeGroups.includes(trimmed)) {
-            setSelectedAgeGroups(prev => [...prev, trimmed]);
-            setCustomAgeGroup("");
+        let newGroup = "";
+
+        if (customGroupType === 'range') {
+            const year1 = parseInt(customYear1);
+            const year2 = parseInt(customYear2);
+            if (!isNaN(year1) && !isNaN(year2)) {
+                // Автоматично сортуємо роки (менший-більший)
+                const minYear = Math.min(year1, year2);
+                const maxYear = Math.max(year1, year2);
+                newGroup = `${minYear}-${maxYear}`;
+            }
+        } else if (customGroupType === 'single') {
+            const year = parseInt(customSingleYear);
+            if (!isNaN(year)) {
+                newGroup = `${year}`;
+            }
+        } else if (customGroupType === 'older') {
+            const year = parseInt(customSingleYear);
+            if (!isNaN(year)) {
+                newGroup = `${year} і старше`;
+            }
+        } else if (customGroupType === 'younger') {
+            const year = parseInt(customSingleYear);
+            if (!isNaN(year)) {
+                newGroup = `${year} і молодше`;
+            }
+        }
+
+        if (newGroup && !selectedAgeGroups.includes(newGroup)) {
+            setSelectedAgeGroups(prev => [...prev, newGroup]);
+            // Очищаємо поля
+            setCustomYear1("");
+            setCustomYear2("");
+            setCustomSingleYear("");
         }
     }
 
@@ -132,24 +169,98 @@ export default function CreateCompetition() {
                         ))}
                     </div>
 
-                    <div style={{ marginBottom: "15px" }}>
-                        <label style={{ display: "block", marginBottom: "5px" }}>Додати власну категорію:</label>
-                        <div style={{ display: "flex", gap: "5px" }}>
-                            <input
-                                type="text"
-                                value={customAgeGroup}
-                                onChange={(e) => setCustomAgeGroup(e.target.value)}
-                                placeholder="Наприклад: 2010-2011 або 2005 і старше"
-                                style={{ flex: 1 }}
-                                onKeyPress={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        addCustomAgeGroup();
-                                    }
-                                }}
-                            />
-                            <button type="button" onClick={addCustomAgeGroup}>Додати</button>
+                    <div style={{ marginBottom: "15px", padding: "15px", border: "1px solid #ddd", borderRadius: "4px" }}>
+                        <label style={{ display: "block", marginBottom: "10px", fontWeight: "bold" }}>Додати власну категорію:</label>
+
+                        <div style={{ marginBottom: "10px" }}>
+                            <label style={{ display: "block", marginBottom: "5px" }}>Тип категорії:</label>
+                            <select
+                                value={customGroupType}
+                                onChange={(e) => setCustomGroupType(e.target.value as CustomGroupType)}
+                                style={{ width: "100%", padding: "5px" }}
+                            >
+                                <option value="range">Діапазон років (наприклад: 2010-2011)</option>
+                                <option value="single">Один рік (наприклад: 2012)</option>
+                                <option value="older">Рік і старше (наприклад: 2007 і старше)</option>
+                                <option value="younger">Рік і молодше (наприклад: 2020 і молодше)</option>
+                            </select>
                         </div>
+
+                        {customGroupType === 'range' && (
+                            <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                                <input
+                                    type="number"
+                                    value={customYear1}
+                                    onChange={(e) => setCustomYear1(e.target.value)}
+                                    placeholder="Рік 1"
+                                    style={{ flex: 1, padding: "5px" }}
+                                    min={1900}
+                                    max={currentYear + 10}
+                                />
+                                <span>-</span>
+                                <input
+                                    type="number"
+                                    value={customYear2}
+                                    onChange={(e) => setCustomYear2(e.target.value)}
+                                    placeholder="Рік 2"
+                                    style={{ flex: 1, padding: "5px" }}
+                                    min={1900}
+                                    max={currentYear + 10}
+                                />
+                            </div>
+                        )}
+
+                        {customGroupType === 'single' && (
+                            <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                                <input
+                                    type="number"
+                                    value={customSingleYear}
+                                    onChange={(e) => setCustomSingleYear(e.target.value)}
+                                    placeholder="Рік народження"
+                                    style={{ flex: 1, padding: "5px" }}
+                                    min={1900}
+                                    max={currentYear + 10}
+                                />
+                            </div>
+                        )}
+
+                        {customGroupType === 'older' && (
+                            <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                                <input
+                                    type="number"
+                                    value={customSingleYear}
+                                    onChange={(e) => setCustomSingleYear(e.target.value)}
+                                    placeholder="Рік народження"
+                                    style={{ flex: 1, padding: "5px" }}
+                                    min={1900}
+                                    max={currentYear + 10}
+                                />
+                                <span style={{ whiteSpace: "nowrap" }}>і старше</span>
+                            </div>
+                        )}
+
+                        {customGroupType === 'younger' && (
+                            <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                                <input
+                                    type="number"
+                                    value={customSingleYear}
+                                    onChange={(e) => setCustomSingleYear(e.target.value)}
+                                    placeholder="Рік народження"
+                                    style={{ flex: 1, padding: "5px" }}
+                                    min={1900}
+                                    max={currentYear + 10}
+                                />
+                                <span style={{ whiteSpace: "nowrap" }}>і молодше</span>
+                            </div>
+                        )}
+
+                        <button
+                            type="button"
+                            onClick={addCustomAgeGroup}
+                            style={{ width: "100%" }}
+                        >
+                            Додати категорію
+                        </button>
                     </div>
 
                     {selectedAgeGroups.some(g => !DEFAULT_BIRTH_YEAR_GROUPS.includes(g)) && (

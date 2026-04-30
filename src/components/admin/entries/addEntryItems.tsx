@@ -70,6 +70,36 @@ export default function AddEntryItems() {
         setError(null);
     }
 
+    function sortParticipantsByAge() {
+        const sorted = [...participants].sort((a, b) => b.birthYear - a.birthYear); // youngest first (higher year = younger)
+        setParticipants(sorted);
+        setSuccess("Учасників відсортовано за віком (від молодших до старших)");
+    }
+
+    function blockDuplicates() {
+        const seen = new Map<string, number>();
+        const duplicates: string[] = [];
+        const unique: Participant[] = [];
+
+        participants.forEach((participant, index) => {
+            const key = `${participant.name.trim().toLowerCase()}_${participant.surname.trim().toLowerCase()}_${participant.birthYear}_${participant.distanceId}`;
+
+            if (seen.has(key)) {
+                duplicates.push(`${participant.name} ${participant.surname} (${participant.birthYear}) - дистанція ${distances.find(d => d.id === participant.distanceId)?.name || participant.distanceId}`);
+            } else {
+                seen.set(key, index);
+                unique.push(participant);
+            }
+        });
+
+        if (duplicates.length > 0) {
+            setParticipants(unique);
+            setError(`Видалено ${duplicates.length} дублікатів: ${duplicates.join(', ')}`);
+        } else {
+            setSuccess("Дублікатів не знайдено");
+        }
+    }
+
     function removeParticipant(index: number) {
         setParticipants(participants.filter((_, i) => i !== index));
     }
@@ -79,6 +109,31 @@ export default function AddEntryItems() {
         updated[index] = { ...updated[index], [field]: value } as Participant;
         setParticipants(updated);
     }
+
+    // Перевірка на дублікати
+    function checkForDuplicates(): { hasDuplicates: boolean; duplicatesList: string[] } {
+        const seen = new Map<string, number>();
+        const duplicates: string[] = [];
+
+        participants.forEach((participant, index) => {
+            if (!participant.name || !participant.surname || !participant.distanceId) {
+                return; // Пропускаємо незаповнені поля
+            }
+
+            const key = `${participant.name.trim().toLowerCase()}_${participant.surname.trim().toLowerCase()}_${participant.birthYear}_${participant.distanceId}`;
+
+            if (seen.has(key)) {
+                const distanceName = distances.find(d => d.id === participant.distanceId)?.name || `ID ${participant.distanceId}`;
+                duplicates.push(`${participant.name} ${participant.surname} (${participant.birthYear}) - ${distanceName}`);
+            } else {
+                seen.set(key, index);
+            }
+        });
+
+        return { hasDuplicates: duplicates.length > 0, duplicatesList: duplicates };
+    }
+
+    const duplicateCheck = checkForDuplicates();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -188,7 +243,20 @@ export default function AddEntryItems() {
 
                 <button type="button" onClick={addParticipant}>+ Додати учасника</button>
                 <br />
-                <button type="submit">Зберегти учасників</button>
+                {duplicateCheck.hasDuplicates && (
+                    <div style={{ color: 'red', marginTop: '10px', marginBottom: '10px', padding: '10px', border: '1px solid red', borderRadius: '4px' }}>
+                        <strong>⚠️ Знайдено дублікати:</strong>
+                        <ul style={{ marginTop: '5px', marginBottom: '0' }}>
+                            {duplicateCheck.duplicatesList.map((dup, idx) => (
+                                <li key={idx}>{dup}</li>
+                            ))}
+                        </ul>
+                        <p style={{ marginTop: '10px', marginBottom: '0' }}>Видаліть дублікати перед збереженням.</p>
+                    </div>
+                )}
+                <button type="submit" disabled={duplicateCheck.hasDuplicates}>
+                    {duplicateCheck.hasDuplicates ? 'Видаліть дублікати' : 'Зберегти учасників'}
+                </button>
             </form>
             <p className="success">{success}</p>
             <p>{error}</p>

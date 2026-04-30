@@ -16,11 +16,12 @@ import UpdateHeat from "./components/admin/update/updateHeat";
 import CreateEntry from "./components/admin/create/createEntry";
 import EntryProtocol from "./components/entries/entryProtocol";
 import GenerateHeats from "./components/admin/seeding/generateHeats";
-import StartList from "./components/startList/startList";
 import AddEntryItems from "./components/admin/entries/addEntryItems";
 import SelectEntry from "./components/admin/entries/selectEntry";
 import Sportmens from "./components/sportmens/sportmens";
 import SportmenDetails from "./components/sportmens/sportmenDetails";
+import AddResults from "./components/admin/create/addResults";
+import Results from "./components/results/results";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -39,12 +40,13 @@ root.render(
             <Route path="/heats" element={<Heats />} />
             <Route path="/admin/heats/create" element={<CreateHeat />} />
             <Route path="/admin/heats/update" element={<UpdateHeat />} />
+            <Route path="/admin/results/add" element={<AddResults />} />
+            <Route path="/results" element={<Results />} />
             <Route path="/admin/entries/create" element={<CreateEntry />} />
             <Route path="/admin/entries/select" element={<SelectEntry />} />
             <Route path="/admin/entries/items/add" element={<AddEntryItems />} />
             <Route path="/entry-protocol" element={<EntryProtocol />} />
             <Route path="/admin/seeding/generate" element={<GenerateHeats />} />
-            <Route path="/start-list" element={<StartList />} />
             <Route path="/sportmens" element={<Sportmens />} />
             <Route path="/sportmens/:id" element={<SportmenDetails />} />
         </Routes>
