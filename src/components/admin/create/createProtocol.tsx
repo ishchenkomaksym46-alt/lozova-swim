@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {api} from "../../../api/axios";
+import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 type CompetitionType = {
     id: number;
@@ -7,12 +8,13 @@ type CompetitionType = {
     date: string;
 }
 
-export default function CreateSportmen() {
+export default function CreateProtocol() {
+    useAdminAuth();
+
     const [competitions, setCompetitions] = useState<CompetitionType[]>([]);
     const [competitionId, setCompetitionId] = useState<string>("");
-    const [name, setName] = useState<string>("");
-    const [surname, setSurname] = useState<string>("");
-    const [birthYear, setBirthYear] = useState<string>("");
+    const [header, setHeader] = useState<string>("");
+    const [text, setText] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -39,34 +41,24 @@ export default function CreateSportmen() {
         setSuccess(null);
         setLoading(true);
 
-        if(!competitionId || !name || !surname || !birthYear) {
+        if(!competitionId || !header || !text) {
             setError("Заповніть всі поля");
             setLoading(false);
             return;
         }
 
-        const year = Number(birthYear);
-        if(isNaN(year) || year < 1900 || year > new Date().getFullYear()) {
-            setError("Невірний рік народження");
-            setLoading(false);
-            return;
-        }
-
         try {
-            const res = await api.post('/swimmers/create', {
-                name,
-                surname,
-                birthYear: year,
-                competitionId: Number(competitionId)
+            const res = await api.post(`/protocols/create?competitionId=${competitionId}`, {
+                header,
+                text
             });
 
             if(res.status === 200) {
-                setSuccess("Спортсмена успішно додано");
-                setName("");
-                setSurname("");
-                setBirthYear("");
+                setSuccess("Протокол успішно створено");
+                setHeader("");
+                setText("");
             } else {
-                setError(res.data.message || "Помилка при створенні спортсмена");
+                setError(res.data.message || "Помилка при створенні протоколу");
             }
         } catch (e: any) {
             console.error(e);
@@ -78,12 +70,12 @@ export default function CreateSportmen() {
 
     return (
         <div className="page-wrapper">
-            <div className="container" style={{ maxWidth: '600px' }}>
+            <div className="container">
                 <a href="/admin" className="back-link">← Назад до адмін панелі</a>
 
                 <div className="page-header">
-                    <h1 className="page-title">➕ Додати спортсмена</h1>
-                    <p className="page-subtitle">Додайте нового учасника змагань</p>
+                    <h1 className="page-title">Створити протокол</h1>
+                    <p className="page-subtitle">Додайте новий протокол до змагання</p>
                 </div>
 
                 <div className="card">
@@ -106,45 +98,31 @@ export default function CreateSportmen() {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Ім'я:</label>
+                            <label className="form-label">Заголовок:</label>
                             <input
                                 type="text"
                                 className="form-input"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={header}
+                                onChange={(e) => setHeader(e.target.value)}
                                 disabled={loading}
-                                placeholder="Введіть ім'я"
+                                placeholder="Введіть заголовок протоколу"
                             />
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Прізвище:</label>
-                            <input
-                                type="text"
-                                className="form-input"
-                                value={surname}
-                                onChange={(e) => setSurname(e.target.value)}
+                            <label className="form-label">Текст:</label>
+                            <textarea
+                                className="form-textarea"
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
                                 disabled={loading}
-                                placeholder="Введіть прізвище"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label">Рік народження:</label>
-                            <input
-                                type="number"
-                                className="form-input"
-                                value={birthYear}
-                                onChange={(e) => setBirthYear(e.target.value)}
-                                disabled={loading}
-                                placeholder="Наприклад: 2010"
-                                min="1900"
-                                max={new Date().getFullYear()}
+                                placeholder="Введіть текст протоколу"
+                                rows={10}
                             />
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-                            {loading ? "Додавання..." : "Додати спортсмена"}
+                            {loading ? "Створення..." : "Створити протокол"}
                         </button>
                     </form>
 

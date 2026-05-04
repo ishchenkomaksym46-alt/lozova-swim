@@ -69,65 +69,80 @@ export default function SelectEntryToAddParticipants() {
     }, [selectedCompetitionId]);
 
     return (
-        <div>
-            <a href="/admin">Повернутися до консолі</a>
-            <h2>Додати учасників до заявки</h2>
+        <div className="page-wrapper">
+            <div className="container">
+                <a href="/admin" className="back-link">← Назад до консолі</a>
 
-            <div style={{ marginBottom: "20px" }}>
-                <label htmlFor="competition">Оберіть змагання:</label>
-                <br />
-                <select
-                    id="competition"
-                    value={selectedCompetitionId}
-                    onChange={(e) => setSelectedCompetitionId(Number(e.target.value))}
-                    style={{ padding: "5px", minWidth: "300px" }}
-                >
-                    <option value={0}>-- Оберіть змагання --</option>
-                    {competitions.map(comp => (
-                        <option key={comp.id} value={comp.id}>
-                            {comp.name} ({comp.date})
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {loading && <p>Завантаження заявок...</p>}
-
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            {selectedCompetitionId !== 0 && !loading && entries.length === 0 && (
-                <p>Немає заявок для цього змагання. <a href="/admin/entries/create">Створити нову заявку</a></p>
-            )}
-
-            {entries.length > 0 && (
-                <div>
-                    <h3>Оберіть заявку:</h3>
-                    <table border={1} cellPadding={10} style={{ width: "100%", borderCollapse: "collapse" }}>
-                        <thead>
-                            <tr>
-                                <th>Назва заявки</th>
-                                <th>Кількість учасників</th>
-                                <th>Дата створення</th>
-                                <th>Дія</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {entries.map(entry => (
-                                <tr key={entry.id}>
-                                    <td>{entry.name}</td>
-                                    <td>{entry._count.entryItems}</td>
-                                    <td>{new Date(entry.createdAt).toLocaleString('uk-UA')}</td>
-                                    <td>
-                                        <a href={`/admin/entries/items/add?id=${entry.id}`}>
-                                            <button>Додати учасників</button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="page-header">
+                    <h1 className="page-title">👥 Додати учасників до заявки</h1>
+                    <p className="page-subtitle">Оберіть змагання та заявку для додавання учасників</p>
                 </div>
-            )}
+
+                <div className="card">
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="competition">Оберіть змагання:</label>
+                        <select
+                            id="competition"
+                            className="form-input"
+                            value={selectedCompetitionId}
+                            onChange={(e) => setSelectedCompetitionId(Number(e.target.value))}
+                        >
+                            <option value={0}>-- Оберіть змагання --</option>
+                            {competitions.map(comp => (
+                                <option key={comp.id} value={comp.id}>
+                                    {comp.name} ({comp.date})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {loading && <div className="loading">Завантаження заявок</div>}
+
+                    {error && <div className="alert alert-error">{error}</div>}
+
+                    {selectedCompetitionId !== 0 && !loading && entries.length === 0 && (
+                        <div className="empty-state">
+                            <div className="empty-state-icon">📋</div>
+                            <h3 className="empty-state-title">Немає заявок</h3>
+                            <p className="empty-state-text">
+                                Для цього змагання ще не створено заявок. <a href="/admin/entries/create" style={{ color: 'var(--water-medium)', textDecoration: 'underline' }}>Створити нову заявку</a>
+                            </p>
+                        </div>
+                    )}
+
+                    {entries.length > 0 && (
+                        <>
+                            <h3 className="card-title" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>Оберіть заявку:</h3>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                    <thead>
+                                        <tr style={{ background: 'var(--gray-100)' }}>
+                                            <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Назва заявки</th>
+                                            <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>Учасників</th>
+                                            <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Дата створення</th>
+                                            <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>Дія</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {entries.map((entry, idx) => (
+                                            <tr key={entry.id} style={{ background: idx % 2 === 0 ? 'var(--white)' : 'var(--gray-50)' }}>
+                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>{entry.name}</td>
+                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center' }}>{entry._count.entryItems}</td>
+                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem' }}>{new Date(entry.createdAt).toLocaleString('uk-UA')}</td>
+                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center' }}>
+                                                    <a href={`/admin/entries/items/add?id=${entry.id}`} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+                                                        ➕ Додати учасників
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

@@ -61,27 +61,64 @@ export default function Distances() {
     }, [id, navigate]);
 
     return(
-        <div>
-            <div className="distances">
-                <a href="/">Назад</a>
-                {isAdmin && <nav>
-                    <a href={`/admin/distances/create?id=${id}`}>Додати дистанцію</a>
-                    <a href="/admin/distances/delete">Видалити дистанцію</a>
-                    <a href="/admin/distances/update">Виправити назву дистанції</a>
-                </nav>}
+        <div className="page-wrapper">
+            <div className="container">
+                <a href="/" className="back-link">← Назад на головну</a>
 
-                {loading && <p>Завантаження...</p>}
+                <div className="page-header">
+                    <h1 className="page-title">🏁 Дистанції</h1>
+                    <p className="page-subtitle">Перегляд дистанцій змагання</p>
+                </div>
 
-                {!loading && distances.length === 0 && <h2>Дистанцій ще нема</h2>}
-                {!loading && distances.map((el: DistancesType) => (
-                    <div className="distance" key={el.id}>
-                        <h2>{el.name}</h2>
-                        <h3>Кількість запливів: {el.heats.length}</h3>
-                        <a href={`/heats?id=${el.id}`}>Дивитись запливи</a>
+                {isAdmin && (
+                    <div className="card section-spacing">
+                        <div className="card-header">
+                            <h3 className="card-title">⚙️ Адмін панель</h3>
+                        </div>
+                        <div className="card-body action-bar">
+                            <a href={`/admin/distances/create?id=${id}`} className="btn btn-primary">
+                                ➕ Додати дистанцію
+                            </a>
+                            <a href="/admin/distances/update" className="btn btn-secondary">
+                                ✏️ Виправити дистанцію
+                            </a>
+                            <a href="/admin/distances/delete" className="btn btn-danger">
+                                🗑️ Видалити дистанцію
+                            </a>
+                        </div>
                     </div>
-                ))}
+                )}
+
+                {loading && <div className="loading">Завантаження дистанцій</div>}
+
+                {error && <div className="alert alert-error">{error}</div>}
+
+                {!loading && distances.length === 0 && (
+                    <div className="empty-state">
+                        <div className="empty-state-icon">🏁</div>
+                        <h3 className="empty-state-title">Дистанцій ще немає</h3>
+                        <p className="empty-state-text">Для цього змагання ще не додано дистанцій</p>
+                    </div>
+                )}
+
+                <div className="cards-grid">
+                    {!loading && distances.map((el: DistancesType) => (
+                        <div key={el.id} className="card card-hover accent-card">
+                            <div className="card-header">
+                                <h2 className="card-title">{el.name}</h2>
+                            </div>
+                            <div className="card-body">
+                                <p className="detail-value" style={{ marginBottom: '1rem' }}>
+                                    <strong>🏊 Кількість запливів:</strong> {el.heats.length}
+                                </p>
+                                <a href={`/heats?id=${el.id}`} className="btn btn-primary btn-full">
+                                    Дивитись запливи →
+                                </a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
-            <p>{error}</p>
         </div>
     )
 }

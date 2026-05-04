@@ -41,26 +41,50 @@ export default function MainPage() {
     }, []);
 
     return (
-        <div>
-            <h1>Плавання Лозової</h1>
+        <div className="page-wrapper">
+            <div className="container">
+                <div className="page-header">
+                    <h1 className="page-title">🏊 Плавання Лозової</h1>
+                    <p className="page-subtitle">Результати змагань з плавання</p>
+                </div>
 
-            <nav>
-                <a href="/sportmens">Спортсмени</a>
-            </nav>
-            <hr />
-            {loading && <p>Завантаження...</p>}
-            <div className="competitions">
-                {!loading && competitions.map((el: CompetitionType) => (
-                    <div className="competition" key={el.id}>
-                        <h2>{el.name}</h2>
-                        <h3>Дата проведення: {el.date}</h3>
-                        <div className="distancesNumber">
-                            <h4>Кількість дистанцій: {el.distances.length}</h4>
-                        </div>
-                        <a href={`/distances?id=${el.id}`}>Дивитись дистанції</a>
+                <nav className="nav-actions section-spacing">
+                    <a href="/sportmens" className="btn btn-secondary">👤 Спортсмени</a>
+                    <a href="/protocols" className="btn btn-secondary">📋 Протоколи</a>
+                </nav>
+
+                {loading && <div className="loading">Завантаження змагань</div>}
+
+                {error && <div className="alert alert-error">{error}</div>}
+
+                {!loading && competitions.length === 0 && !error && (
+                    <div className="empty-state">
+                        <div className="empty-state-icon">🏊</div>
+                        <h3 className="empty-state-title">Змагань не знайдено</h3>
+                        <p className="empty-state-text">Наразі немає доступних змагань</p>
                     </div>
-                ))}
-                <p>{error}</p>
+                )}
+
+                <div className="cards-grid">
+                    {!loading && competitions.map((el: CompetitionType) => (
+                        <div className="card card-hover accent-card" key={el.id}>
+                            <div className="card-header">
+                                <h2 className="card-title">{el.name}</h2>
+                            </div>
+                            <div className="card-body">
+                                <p className="detail-value" style={{ marginBottom: '0.5rem' }}>
+                                    <strong>📅 Дата:</strong> {el.date}
+                                </p>
+                                <p className="detail-value" style={{ marginBottom: '1rem' }}>
+                                    <strong>🏁 Дистанцій:</strong> {el.distances.length}
+                                </p>
+                                <a href={`/distances?id=${el.id}`} className="btn btn-primary btn-full">
+                                    Дивитись дистанції →
+                                </a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     )

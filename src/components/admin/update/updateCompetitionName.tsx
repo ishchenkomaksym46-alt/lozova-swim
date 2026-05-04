@@ -25,6 +25,9 @@ export default function UpdateCompetitionName() {
 
             if(res.data.success) {
                 setSuccess("Змагання успішно оновлено");
+                setOldName('');
+                setName('');
+                setDate('');
             } else {
                 setError(res.data.message || "Помилка при оновленні змагання");
             }
@@ -35,28 +38,63 @@ export default function UpdateCompetitionName() {
     }
 
     return(
-        <div>
-            <a href="/admin">Назад до консолі</a>
-            <h1>Виправити назву змагань або дату проведення</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="update" id="oldName"
-                onChange={(e) => setOldName(e.target.value)}
-                placeholder="Стара назва змагання"
-                minLength={3} required />
+        <div className="page-wrapper">
+            <div className="container" style={{ maxWidth: '600px' }}>
+                <a href="/admin" className="back-link">← Назад до консолі</a>
 
-                <input type="text" name="update" id="name"
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Нова назва змагання"
-                minLength={3} required />
+                <div className="page-header">
+                    <h1 className="page-title">✏️ Виправити змагання</h1>
+                    <p className="page-subtitle">Оновіть назву або дату змагання</p>
+                </div>
 
-                <input type="text" name="update" id="date"
-                onChange={(e) => setDate(e.target.value)}
-                placeholder="Нова дата проведення змагань"
-                minLength={3} required />
-                <button>Виправити</button>
-            </form>
-            <p className="success">{success}</p>
-            <p>{error}</p>
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Стара назва змагання:</label>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={oldName}
+                                onChange={(e) => setOldName(e.target.value)}
+                                placeholder="Введіть стару назву"
+                                minLength={3}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Нова назва змагання:</label>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Введіть нову назву"
+                                minLength={3}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Нова дата проведення:</label>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                placeholder="Введіть нову дату"
+                                minLength={3}
+                                required
+                            />
+                        </div>
+
+                        <button className="btn btn-primary btn-full">Виправити змагання</button>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                </div>
+            </div>
         </div>
     )
 }

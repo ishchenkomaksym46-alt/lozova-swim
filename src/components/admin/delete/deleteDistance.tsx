@@ -8,10 +8,15 @@ export default function DeleteDistance() {
     const [name, setName] = useState<string>("");
 
     useAdminAuth();
-    
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
+        setSuccess(null);
+
+        if(!window.confirm(`Ви впевнені, що хочете видалити дистанцію "${name}"?`)) {
+            return;
+        }
 
         try {
             const res = await api.delete('/distances/delete', {
@@ -20,6 +25,7 @@ export default function DeleteDistance() {
 
             if(res.data.success) {
                 setSuccess("Дистанцію успішно видалено");
+                setName("");
             } else {
                 setError("Помилка при видаленні дистанції");
             }
@@ -30,16 +36,36 @@ export default function DeleteDistance() {
     }
 
     return(
-        <div>
-            <a href="/admin">Назад</a>
-            <h2>Видалити дистанцію</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Назва дистанції"
-                onChange={e => setName(e.target.value)}/>
-                <button>Видалити</button>
-            </form>
-            <p className="success">{success}</p>
-            <p>{error}</p>
+        <div className="page-wrapper">
+            <div className="container" style={{ maxWidth: '600px' }}>
+                <a href="/admin" className="back-link">← Назад до консолі</a>
+
+                <div className="page-header">
+                    <h1 className="page-title">🗑️ Видалити дистанцію</h1>
+                    <p className="page-subtitle">Видаліть дистанцію зі змагання</p>
+                </div>
+
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Назва дистанції:</label>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                placeholder="Введіть назву дистанції"
+                                required
+                            />
+                        </div>
+
+                        <button className="btn btn-danger btn-full">Видалити дистанцію</button>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                </div>
+            </div>
         </div>
     )
 }

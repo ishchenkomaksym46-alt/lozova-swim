@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {api} from "../../../api/axios";
+import {useAdminAuth} from "../../../hooks/useAdminAuth";
 
 type CompetitionType = {
     id: number;
@@ -7,22 +8,21 @@ type CompetitionType = {
     date: string;
 }
 
-type SwimmerType = {
-    id: number;
-    name: string;
-    surname: string;
-    birthYear: number;
+type ProtocolType = {
+    header: string;
+    text: string;
 }
 
-export default function DeleteSportmen() {
+export default function DeleteProtocol() {
+    useAdminAuth();
+
     const [competitions, setCompetitions] = useState<CompetitionType[]>([]);
-    const [swimmers, setSwimmers] = useState<SwimmerType[]>([]);
     const [competitionId, setCompetitionId] = useState<string>("");
-    const [swimmerId, setSwimmerId] = useState<string>("");
+    const [protocols, setProtocols] = useState<ProtocolType[]>([]);
+    const [selectedProtocol, setSelectedProtocol] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [loadingSwimmers, setLoadingSwimmers] = useState<boolean>(false);
 
     useEffect(() => {
         const getCompetitions = async () => {
@@ -42,32 +42,24 @@ export default function DeleteSportmen() {
 
     useEffect(() => {
         if(!competitionId) {
-            setSwimmers([]);
+            setProtocols([]);
             return;
         }
 
-        const getSwimmers = async () => {
-            setLoadingSwimmers(true);
+        const getProtocols = async () => {
             try {
-                const res = await api.get('/swimmers', {
-                    params: {
-                        competitionId,
-                        page: 1
-                    }
-                });
+                const res = await api.get(`/protocols?competitionId=${competitionId}&page=1`);
 
                 if(res.status === 200) {
-                    setSwimmers(res.data.swimmers);
+                    setProtocols(res.data.protocol);
                 }
-            } catch (e) {
+            } catch (e: any) {
                 console.error(e);
-                setError("Помилка завантаження спортсменів");
-            } finally {
-                setLoadingSwimmers(false);
+                setError(e.response?.data?.message || "Помилка завантаження протоколів");
             }
         }
 
-        getSwimmers();
+        getProtocols();
     }, [competitionId]);
 
     const handleDelete = async (e: React.FormEvent) => {
@@ -76,31 +68,32 @@ export default function DeleteSportmen() {
         setSuccess(null);
         setLoading(true);
 
-        if(!swimmerId) {
-            setError("Оберіть спортсмена");
+        if(!selectedProtocol) {
+            setError("Оберіть протокол для видалення");
             setLoading(false);
             return;
         }
 
-        const swimmer = swimmers.find(s => s.id === Number(swimmerId));
-        if(!window.confirm(`Ви впевнені, що хочете видалити спортсмена "${swimmer?.surname} ${swimmer?.name}"?`)) {
+        if(!window.confirm(`Ви впевнені, що хочете видалити протокол "${selectedProtocol}"?`)) {
             setLoading(false);
             return;
         }
 
         try {
-            const res = await api.delete('/swimmers/delete', {
-                params: {
-                    id: Number(swimmerId)
-                }
+            const res = await api.delete('/protocols/delete', {
+                data: { header: selectedProtocol }
             });
 
             if(res.status === 200) {
-                setSuccess("Спортсмена успішно видалено");
-                setSwimmers(swimmers.filter(s => s.id !== Number(swimmerId)));
-                setSwimmerId("");
+                setSuccess("Протокол успішно видалено");
+                setSelectedProtocol("");
+
+                const protocolsRes = await api.get(`/protocols?competitionId=${competitionId}&page=1`);
+                if(protocolsRes.status === 200) {
+                    setProtocols(protocolsRes.data.protocol);
+                }
             } else {
-                setError(res.data.message || "Помилка при видаленні спортсмена");
+                setError(res.data.message || "Помилка при видаленні протоколу");
             }
         } catch (e: any) {
             console.error(e);
@@ -112,12 +105,12 @@ export default function DeleteSportmen() {
 
     return (
         <div className="page-wrapper">
-            <div className="container" style={{ maxWidth: '600px' }}>
+            <div className="container">
                 <a href="/admin" className="back-link">← Назад до адмін панелі</a>
 
                 <div className="page-header">
-                    <h1 className="page-title">🗑️ Видалити спортсмена</h1>
-                    <p className="page-subtitle">Видаліть учасника зі змагань</p>
+                    <h1 className="page-title">Видалити протокол</h1>
+                    <p className="page-subtitle">Видаліть протокол зі змагання</p>
                 </div>
 
                 <div className="card" style={{ marginBottom: '1.5rem' }}>
@@ -126,10 +119,7 @@ export default function DeleteSportmen() {
                         <select
                             className="form-select"
                             value={competitionId}
-                            onChange={(e) => {
-                                setCompetitionId(e.target.value);
-                                setSwimmerId("");
-                            }}
+                            onChange={(e) => setCompetitionId(e.target.value)}
                             disabled={loading}
                         >
                             <option value="">-- Оберіть змагання --</option>
@@ -142,30 +132,32 @@ export default function DeleteSportmen() {
                     </div>
                 </div>
 
-                {loadingSwimmers && <div className="loading">Завантаження спортсменів</div>}
-
-                {competitionId && !loadingSwimmers && swimmers.length > 0 && (
+                {competitionId && protocols.length > 0 && (
                     <div className="card">
                         <form onSubmit={handleDelete}>
                             <div className="form-group">
-                                <label className="form-label">Спортсмен:</label>
+                                <label className="form-label">Протокол:</label>
                                 <select
                                     className="form-select"
-                                    value={swimmerId}
-                                    onChange={(e) => setSwimmerId(e.target.value)}
+                                    value={selectedProtocol}
+                                    onChange={(e) => setSelectedProtocol(e.target.value)}
                                     disabled={loading}
                                 >
-                                    <option value="">-- Оберіть спортсмена --</option>
-                                    {swimmers.map((swimmer) => (
-                                        <option key={swimmer.id} value={swimmer.id}>
-                                            {swimmer.surname} {swimmer.name} ({swimmer.birthYear})
+                                    <option value="">-- Оберіть протокол --</option>
+                                    {protocols.map((protocol, index) => (
+                                        <option key={index} value={protocol.header}>
+                                            {protocol.header}
                                         </option>
                                     ))}
                                 </select>
                             </div>
 
-                            <button type="submit" className="btn btn-danger btn-full" disabled={loading || !swimmerId}>
-                                {loading ? "Видалення..." : "Видалити спортсмена"}
+                            <button
+                                type="submit"
+                                className="btn btn-danger btn-full"
+                                disabled={loading || !selectedProtocol}
+                            >
+                                {loading ? "Видалення..." : "Видалити протокол"}
                             </button>
                         </form>
 
@@ -174,11 +166,11 @@ export default function DeleteSportmen() {
                     </div>
                 )}
 
-                {competitionId && !loadingSwimmers && swimmers.length === 0 && (
+                {competitionId && protocols.length === 0 && !error && (
                     <div className="empty-state">
-                        <div className="empty-state-icon">👤</div>
-                        <h3 className="empty-state-title">Спортсменів не знайдено</h3>
-                        <p className="empty-state-text">Для цього змагання немає спортсменів</p>
+                        <div className="empty-state-icon">📋</div>
+                        <h3 className="empty-state-title">Протоколів не знайдено</h3>
+                        <p className="empty-state-text">Для цього змагання немає протоколів</p>
                     </div>
                 )}
             </div>

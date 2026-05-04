@@ -122,94 +122,113 @@ export default function AddResults() {
 
     if (!distanceId) {
         return (
-            <div>
-                <a href="/">Назад</a>
-                <p>Не вказано ID дистанції</p>
+            <div className="page-wrapper">
+                <div className="container">
+                    <a href="/" className="back-link">← Головна</a>
+                    <div className="alert alert-error">Не вказано ID дистанції</div>
+                </div>
             </div>
         );
     }
 
     return (
-        <div>
-            <a href={`/heats?id=${distanceId}`}>Назад до запливів</a>
-            <h1>Додати результати</h1>
+        <div className="page-wrapper">
+            <div className="container">
+                <a href={`/heats?id=${distanceId}`} className="back-link">← Назад до запливів</a>
 
-            {loading && <p>Завантаження...</p>}
+                <div className="page-header">
+                    <h1 className="page-title">📝 Додати результати</h1>
+                    <p className="page-subtitle">Введіть фактичний час для учасників запливів</p>
+                </div>
 
-            {!loading && heats.length === 0 && <p>Немає запливів для цієї дистанції</p>}
+                {loading && <div className="loading">Завантаження запливів</div>}
 
-            {!loading && heats.length > 0 && (
-                <>
-                    <p style={{ marginBottom: '20px' }}>
-                        Формат часу: <strong>мм:сс.мс</strong> (наприклад: 1:23.45)<br/>
-                        Заповніть час тільки для тих учасників, які фінішували.
-                    </p>
+                {!loading && heats.length === 0 && (
+                    <div className="empty-state">
+                        <div className="empty-state-icon">🏊</div>
+                        <h3 className="empty-state-title">Немає запливів</h3>
+                        <p className="empty-state-text">Для цієї дистанції ще не створено запливів</p>
+                    </div>
+                )}
 
-                    <form onSubmit={handleSubmit}>
-                        {heats.map((heat) => (
-                            <div key={heat.id} style={{ marginBottom: '30px' }}>
-                                <h2>Заплив #{heat.heatNumber}</h2>
-                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                    <thead>
-                                        <tr>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Доріжка</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Ім'я</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Прізвище</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Рік народження</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Заявлений час</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Фактичний час</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {heat.participants.map((participant) => {
-                                            const result = results.find(r => r.participantId === participant.id);
-                                            return (
-                                                <tr key={participant.id}>
-                                                    <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
-                                                        {participant.lane}
-                                                    </td>
-                                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                                        {participant.name}
-                                                    </td>
-                                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                                        {participant.surname}
-                                                    </td>
-                                                    <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
-                                                        {participant.birthYear || 'Н/Д'}
-                                                    </td>
-                                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                                        {participant.declaredTime}
-                                                    </td>
-                                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="1:23.45"
-                                                            value={result?.time || ""}
-                                                            onChange={(e) => handleTimeChange(participant.id, e.target.value)}
-                                                            pattern="\d{1,2}:[0-5]\d\.\d{2}"
-                                                            title="Формат: мм:сс.мс"
-                                                            disabled={submitting}
-                                                            style={{ width: '100px' }}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ))}
-
-                        <div style={{ marginTop: '20px' }}>
-                            <button type="submit" disabled={submitting}>
-                                {submitting ? "Додавання..." : "Зберегти результати"}
-                            </button>
+                {!loading && heats.length > 0 && (
+                    <div className="card">
+                        <div style={{ background: 'var(--water-light)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
+                            <p style={{ margin: 0, color: 'var(--text-primary)' }}>
+                                ⏱️ <strong>Формат часу:</strong> мм:сс.мс (наприклад: 1:23.45)<br/>
+                                💡 Заповніть час тільки для тих учасників, які фінішували
+                            </p>
                         </div>
-                    </form>
-                </>
-            )}
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                        <form onSubmit={handleSubmit}>
+                            <div style={{ display: 'grid', gap: '2rem' }}>
+                                {heats.map((heat) => (
+                                    <div key={heat.id} className="card" style={{ background: 'var(--gray-50)' }}>
+                                        <h2 className="card-title" style={{ marginBottom: '1rem' }}>Заплив #{heat.heatNumber}</h2>
+                                        <div style={{ overflowX: 'auto' }}>
+                                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                                <thead>
+                                                    <tr style={{ background: 'var(--gray-100)' }}>
+                                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>Доріжка</th>
+                                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Ім'я</th>
+                                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Прізвище</th>
+                                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>Рік</th>
+                                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Заявлений час</th>
+                                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Фактичний час</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {heat.participants.map((participant, idx) => {
+                                                        const result = results.find(r => r.participantId === participant.id);
+                                                        return (
+                                                            <tr key={participant.id} style={{ background: idx % 2 === 0 ? 'var(--white)' : 'var(--gray-50)' }}>
+                                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>
+                                                                    {participant.lane}
+                                                                </td>
+                                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem' }}>
+                                                                    {participant.name}
+                                                                </td>
+                                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem' }}>
+                                                                    {participant.surname}
+                                                                </td>
+                                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center' }}>
+                                                                    {participant.birthYear || 'Н/Д'}
+                                                                </td>
+                                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem' }}>
+                                                                    {participant.declaredTime}
+                                                                </td>
+                                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.5rem' }}>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-input"
+                                                                        placeholder="1:23.45"
+                                                                        value={result?.time || ""}
+                                                                        onChange={(e) => handleTimeChange(participant.id, e.target.value)}
+                                                                        pattern="\d{1,2}:[0-5]\d\.\d{2}"
+                                                                        title="Формат: мм:сс.мс"
+                                                                        disabled={submitting}
+                                                                        style={{ margin: 0, width: '100%', minWidth: '100px' }}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button type="submit" className="btn btn-primary btn-full" disabled={submitting} style={{ marginTop: '1.5rem' }}>
+                                {submitting ? "Додавання..." : "💾 Зберегти результати"}
+                            </button>
+                        </form>
+
+                        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

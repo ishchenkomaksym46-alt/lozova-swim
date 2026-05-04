@@ -68,55 +68,85 @@ export default function SportmenDetails() {
     }, [id, competitionId]);
 
     if (!competitionId) {
-        return <div>
-            <a href="/sportmens">Назад до списку</a>
-            <p>Не вказано змагання</p>
-        </div>
+        return (
+            <div className="page-wrapper">
+                <div className="container">
+                    <a href="/sportmens" className="back-link">← Назад до списку</a>
+                    <div className="alert alert-error">Не вказано змагання</div>
+                </div>
+            </div>
+        )
     }
 
     return (
-        <div>
-            <a href={`/sportmens?competitionId=${competitionId}`}>Назад до списку</a>
+        <div className="page-wrapper">
+            <div className="container">
+                <a href={`/sportmens?competitionId=${competitionId}`} className="back-link">← Назад до списку</a>
 
-            {loading && <p>Завантаження...</p>}
+                {loading && <div className="loading">Завантаження даних спортсмена</div>}
 
-            {!loading && swimmer && (
-                <>
-                    <h1>{swimmer.surname} {swimmer.name}</h1>
-                    <h3>Рік народження: {swimmer.birthYear}</h3>
+                {error && <div className="alert alert-error">{error}</div>}
 
-                    <h2>Участь у запливах:</h2>
-                    {swimmer.participations.length === 0 && (
-                        <p>Спортсмен ще не брав участі у запливах</p>
-                    )}
+                {!loading && swimmer && (
+                    <>
+                        <div className="page-header">
+                            <h1 className="page-title">{swimmer.surname} {swimmer.name}</h1>
+                            <p className="page-subtitle">📅 Рік народження: {swimmer.birthYear}</p>
+                        </div>
 
-                    <div className="participations">
-                        {swimmer.participations.map((participation) => (
-                            <div key={participation.id} className="participation">
-                                <h3>Дистанція: {participation.heat.distance.name}</h3>
-                                <p>Заплив/Доріжка: {participation.heat.heatNumber}/{participation.lane}</p>
-                                <p>Заявлений час: {participation.declaredTime}</p>
-                                <p>Фактичний час: {participation.actualTime}</p>
-
-                                {participation.results.length > 0 && (
-                                    <div className="results">
-                                        <h4>Результати:</h4>
-                                        {participation.results.map((result, idx) => (
-                                            <div key={idx}>
-                                                <p><strong>Час:</strong> {result.time}</p>
-                                                <p><strong>Місце в запливі:</strong> {result.placeInHeat}</p>
-                                                <p><strong>Загальне місце:</strong> {result.place}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                        <div className="card">
+                            <div className="card-header">
+                                <h2 className="card-title">🏊 Участь у запливах</h2>
                             </div>
-                        ))}
-                    </div>
-                </>
-            )}
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            {swimmer.participations.length === 0 ? (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">🏊</div>
+                                    <h3 className="empty-state-title">Немає участі</h3>
+                                    <p className="empty-state-text">Спортсмен ще не брав участі у запливах</p>
+                                </div>
+                            ) : (
+                                <div className="stack-lg" style={{ marginTop: '1rem' }}>
+                                    {swimmer.participations.map((participation) => (
+                                        <div key={participation.id} className="card card-muted accent-card">
+                                            <h3 className="card-title" style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
+                                                🏁 {participation.heat.distance.name}
+                                            </h3>
+
+                                            <div className="detail-grid" style={{ marginBottom: '1rem' }}>
+                                                <p className="detail-value">
+                                                    <strong>Заплив/Доріжка:</strong> {participation.heat.heatNumber}/{participation.lane}
+                                                </p>
+                                                <p className="detail-value">
+                                                    <strong>Заявлений час:</strong> {participation.declaredTime}
+                                                </p>
+                                                <p className="detail-value">
+                                                    <strong>Фактичний час:</strong> {participation.actualTime}
+                                                </p>
+                                            </div>
+
+                                            {participation.results.length > 0 && (
+                                                <div className="card card-highlight">
+                                                    <h4 className="section-title" style={{ marginBottom: '0.75rem' }}>
+                                                        🏆 Результати:
+                                                    </h4>
+                                                    {participation.results.map((result, idx) => (
+                                                        <div key={idx} style={{ display: 'grid', gap: '0.25rem', marginBottom: '0.5rem' }}>
+                                                            <p><strong>⏱️ Час:</strong> {result.time}</p>
+                                                            <p><strong>🥇 Місце в запливі:</strong> {result.placeInHeat}</p>
+                                                            <p><strong>🏅 Загальне місце:</strong> {result.place}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
     )
 }

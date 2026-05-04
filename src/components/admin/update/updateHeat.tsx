@@ -67,7 +67,6 @@ export default function UpdateHeat() {
         setError(null);
         setSuccess(null);
 
-        // Валидация формата времени
         for (const participant of participants) {
             if (!validateTimeFormat(participant.actualTime)) {
                 setError(`Неправильний формат часу для ${participant.name} ${participant.surname}. Використовуйте формат мм:сс.мс`);
@@ -83,7 +82,6 @@ export default function UpdateHeat() {
                 }))
             };
 
-            // Добавляем новый номер заплыва только если он указан
             if (newHeatNumber && newHeatNumber !== "") {
                 updateData.newHeatNumber = Number(newHeatNumber);
             }
@@ -110,48 +108,82 @@ export default function UpdateHeat() {
     }
 
     if (loading) {
-        return <div>Завантаження...</div>;
+        return (
+            <div className="page-wrapper">
+                <div className="container">
+                    <div className="loading">Завантаження даних запливу</div>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <a href={`/heats?id=${distanceId}`}>Назад до запливів</a>
-            <h1>Оновити заплив #{oldHeatNumber}</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="newHeatNumber">Новий номер запливу (залиште порожнім, щоб не змінювати):</label>
-                    <input
-                        type="number"
-                        id="newHeatNumber"
-                        value={newHeatNumber}
-                        onChange={(e) => setNewHeatNumber(e.target.value)}
-                        placeholder={`Поточний: ${oldHeatNumber}`}
-                    />
+        <div className="page-wrapper">
+            <div className="container">
+                <a href={`/heats?id=${distanceId}`} className="back-link">← Назад до запливів</a>
+
+                <div className="page-header">
+                    <h1 className="page-title">✏️ Оновити заплив #{oldHeatNumber}</h1>
+                    <p className="page-subtitle">Редагуйте номер запливу та результати учасників</p>
                 </div>
 
-                <h3>Оновити результати учасників</h3>
-                {participants.sort((a, b) => a.lane - b.lane).map((participant) => (
-                    <div key={participant.id} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
-                        <h4>Доріжка {participant.lane}: {participant.name} {participant.surname}</h4>
-                        <p>Заявлений час: {participant.declaredTime}</p>
-                        <label>
-                            Справжній час:
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Новий номер запливу (необов'язково):</label>
                             <input
-                                type="text"
-                                value={participant.actualTime}
-                                onChange={(e) => updateActualTime(participant.id, e.target.value)}
-                                placeholder="мм:сс.мс"
-                                pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
-                                title="Формат: мм:сс.мс (наприклад 1:43.89)"
+                                type="number"
+                                className="form-input"
+                                value={newHeatNumber}
+                                onChange={(e) => setNewHeatNumber(e.target.value)}
+                                placeholder={`Поточний: ${oldHeatNumber}`}
                             />
-                        </label>
-                    </div>
-                ))}
+                            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                                Залиште порожнім, щоб не змінювати номер запливу
+                            </p>
+                        </div>
 
-                <button type="submit">Оновити заплив</button>
-            </form>
-            {success && <p className="success">{success}</p>}
-            {error && <p className="error">{error}</p>}
+                        <div className="card-header">
+                            <h3 className="card-title">Оновити результати учасників</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                                ⏱️ Формат часу: мм:сс.мс (наприклад: 1:23.45)
+                            </p>
+                        </div>
+
+                        <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
+                            {participants.sort((a, b) => a.lane - b.lane).map((participant) => (
+                                <div key={participant.id} className="card" style={{ background: 'var(--gray-50)', borderLeft: '4px solid var(--water-medium)' }}>
+                                    <h4 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--water-deep)', marginBottom: '1rem' }}>
+                                        🏊 Доріжка {participant.lane}: {participant.name} {participant.surname}
+                                    </h4>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                                        <strong>Заявлений час:</strong> {participant.declaredTime}
+                                    </p>
+                                    <div className="form-group" style={{ marginBottom: 0 }}>
+                                        <label className="form-label">Справжній час:</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={participant.actualTime}
+                                            onChange={(e) => updateActualTime(participant.id, e.target.value)}
+                                            placeholder="мм:сс.мс"
+                                            pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
+                                            title="Формат: мм:сс.мс (наприклад 1:43.89)"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <button type="submit" className="btn btn-primary btn-full" style={{ marginTop: '1.5rem' }}>
+                            Оновити заплив
+                        </button>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                </div>
+            </div>
         </div>
     )
 }

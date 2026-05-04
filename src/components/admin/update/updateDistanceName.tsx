@@ -22,7 +22,9 @@ export default function UpdateDistanceName() {
             });
 
             if(res.data.success) {
-                setSuccess("Дистанція успішно оновлено");
+                setSuccess("Дистанцію успішно оновлено");
+                setOldName('');
+                setName('');
             } else {
                 setError(res.data.message || "Помилка при оновленні дистанції");
             }
@@ -33,23 +35,50 @@ export default function UpdateDistanceName() {
     }
 
     return(
-        <div>
-            <a href="/admin">Назад до консолі</a>
-            <h1>Виправити назву дистанцій</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="update" id="oldName"
-                       onChange={(e) => setOldName(e.target.value)}
-                       placeholder="Стара назва дистанції"
-                       minLength={3} required />
+        <div className="page-wrapper">
+            <div className="container" style={{ maxWidth: '600px' }}>
+                <a href="/admin" className="back-link">← Назад до консолі</a>
 
-                <input type="text" name="update" id="name"
-                       onChange={(e) => setName(e.target.value)}
-                       placeholder="Нова назва дистанції"
-                       minLength={3} required />
-                <button>Виправити</button>
-            </form>
-            <p className="success">{success}</p>
-            <p>{error}</p>
+                <div className="page-header">
+                    <h1 className="page-title">✏️ Виправити дистанцію</h1>
+                    <p className="page-subtitle">Оновіть назву дистанції</p>
+                </div>
+
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Стара назва дистанції:</label>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={oldName}
+                                onChange={(e) => setOldName(e.target.value)}
+                                placeholder="Введіть стару назву"
+                                minLength={3}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Нова назва дистанції:</label>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Введіть нову назву"
+                                minLength={3}
+                                required
+                            />
+                        </div>
+
+                        <button className="btn btn-primary btn-full">Виправити дистанцію</button>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                </div>
+            </div>
         </div>
     )
 }

@@ -39,7 +39,6 @@ export default function CreateHeat() {
     }, [id]);
 
     function validateTimeFormat(time: string): boolean {
-        // Формат мм:сс.мс (миллисекунды 00-99)
         const timeRegex = /^\d{1,2}:[0-5]\d\.\d{2}$/;
         return timeRegex.test(time);
     }
@@ -68,7 +67,6 @@ export default function CreateHeat() {
         setError(null);
         setSuccess(null);
 
-        // Валидация формата времени
         for (let i = 0; i < participants.length; i++) {
             const participant = participants[i];
             if (participant && !validateTimeFormat(participant.declared_time)) {
@@ -86,6 +84,7 @@ export default function CreateHeat() {
             if(res.data.success) {
                 setSuccess("Заплив успішно створено");
                 setParticipants([{ name: "", surname: "", declared_time: "" }]);
+                setHeatNumber(heatNumber + 1);
             } else {
                 setError(res.data.message);
             }
@@ -96,93 +95,120 @@ export default function CreateHeat() {
     }
 
     return (
-        <div>
-            <a href="/admin">Повернутися до консолі</a>
-            <h2>Додати запливи</h2>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="heatNumber">Номер запливу: </label>
-                    <input
-                        type="number"
-                        name="heatNumber"
-                        id="heatNumber"
-                        value={heatNumber}
-                        onChange={(e) => setHeatNumber(Number(e.target.value))}
-                        placeholder="Номер запливу"
-                        required
-                    />
+        <div className="page-wrapper">
+            <div className="container">
+                <a href="/admin" className="back-link">← Повернутися до консолі</a>
+
+                <div className="page-header">
+                    <h1 className="page-title">➕ Додати запливи</h1>
+                    <p className="page-subtitle">Створіть новий заплив з учасниками</p>
                 </div>
 
-                <h3>Додати участників (максимум {laneCount})</h3>
-                <p style={{ fontSize: '14px', color: '#666' }}>Формат часу: мм:сс.мс (наприклад: 1:23.45)</p>
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Номер запливу:</label>
+                            <input
+                                type="number"
+                                className="form-input"
+                                value={heatNumber}
+                                onChange={(e) => setHeatNumber(Number(e.target.value))}
+                                placeholder="Номер запливу"
+                                required
+                            />
+                        </div>
 
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>#</th>
-                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Ім'я</th>
-                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Прізвище</th>
-                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Заявлений час</th>
-                            <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2' }}>Дії</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {participants.map((participant, index) => (
-                            <tr key={index}>
-                                <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
-                                    {index + 1}
-                                </td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                    <input
-                                        type="text"
-                                        value={participant.name}
-                                        onChange={(e) => updateParticipant(index, "name", e.target.value)}
-                                        placeholder="Ім'я"
-                                        required
-                                        style={{ width: '100%', padding: '4px' }}
-                                    />
-                                </td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                    <input
-                                        type="text"
-                                        value={participant.surname}
-                                        onChange={(e) => updateParticipant(index, "surname", e.target.value)}
-                                        placeholder="Прізвище"
-                                        required
-                                        style={{ width: '100%', padding: '4px' }}
-                                    />
-                                </td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                                    <input
-                                        type="text"
-                                        value={participant.declared_time}
-                                        onChange={(e) => updateParticipant(index, "declared_time", e.target.value)}
-                                        placeholder="1:23.45"
-                                        pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
-                                        title="Формат: мм:сс.мс"
-                                        required
-                                        style={{ width: '100%', padding: '4px' }}
-                                    />
-                                </td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
-                                    {participants.length > 1 && (
-                                        <button type="button" onClick={() => removeParticipant(index)}>
-                                            Видалити
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        <div className="card-header">
+                            <h3 className="card-title">Додати участників (максимум {laneCount})</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                                ⏱️ Формат часу: мм:сс.мс (наприклад: 1:23.45)
+                            </p>
+                        </div>
 
-                <div style={{ marginTop: '20px' }}>
-                    <button type="button" onClick={addParticipant}>+ Додати участника</button>
-                    <button type="submit" style={{ marginLeft: '10px' }}>Створити заплив</button>
+                        <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                <thead>
+                                    <tr style={{ background: 'var(--gray-100)' }}>
+                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>#</th>
+                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Ім'я</th>
+                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Прізвище</th>
+                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>Заявлений час</th>
+                                        <th style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>Дії</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {participants.map((participant, index) => (
+                                        <tr key={index} style={{ background: index % 2 === 0 ? 'var(--white)' : 'var(--gray-50)' }}>
+                                            <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center', fontWeight: '600' }}>
+                                                {index + 1}
+                                            </td>
+                                            <td style={{ border: '1px solid var(--gray-300)', padding: '0.5rem' }}>
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    value={participant.name}
+                                                    onChange={(e) => updateParticipant(index, "name", e.target.value)}
+                                                    placeholder="Ім'я"
+                                                    required
+                                                    style={{ margin: 0 }}
+                                                />
+                                            </td>
+                                            <td style={{ border: '1px solid var(--gray-300)', padding: '0.5rem' }}>
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    value={participant.surname}
+                                                    onChange={(e) => updateParticipant(index, "surname", e.target.value)}
+                                                    placeholder="Прізвище"
+                                                    required
+                                                    style={{ margin: 0 }}
+                                                />
+                                            </td>
+                                            <td style={{ border: '1px solid var(--gray-300)', padding: '0.5rem' }}>
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    value={participant.declared_time}
+                                                    onChange={(e) => updateParticipant(index, "declared_time", e.target.value)}
+                                                    placeholder="1:23.45"
+                                                    pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
+                                                    title="Формат: мм:сс.мс"
+                                                    required
+                                                    style={{ margin: 0 }}
+                                                />
+                                            </td>
+                                            <td style={{ border: '1px solid var(--gray-300)', padding: '0.5rem', textAlign: 'center' }}>
+                                                {participants.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-danger"
+                                                        onClick={() => removeParticipant(index)}
+                                                        style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+                            <button type="button" className="btn btn-secondary" onClick={addParticipant}>
+                                ➕ Додати участника
+                            </button>
+                            <button type="submit" className="btn btn-primary">
+                                Створити заплив
+                            </button>
+                        </div>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
                 </div>
-            </form>
-            {success && <p style={{ color: 'green', marginTop: '10px' }}>{success}</p>}
-            {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+            </div>
         </div>
     )
 }

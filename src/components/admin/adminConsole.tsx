@@ -27,18 +27,79 @@ export default function AdminConsole() {
     }
 
     return(
-        <div>
-            <a href="/">Назад</a>
-            <h1>Консоль адміністратора</h1>
-            <button onClick={logout}>Вийти з акаунту</button>
-            <a href="/admin/competition/create">Додати змагання</a>
-            <a href="/admin/competition/delete">Видалити змагання</a>
-            <a href="/admin/competition/update">Виправити назву змагання або дату проведення</a>
-            <h2>Заявочний протокол та формування заплавів</h2>
-            <a href="/admin/entries/create">Створити заявку</a>
-            <a href="/admin/entries/select">Додати учасників до заявки</a>
-            <a href="/admin/seeding/generate">Автоматичне формування заплавів</a>
-            <p>{error}</p>
+        <div className="page-wrapper">
+            <div className="container">
+                <a href="/" className="back-link">← Назад на головну</a>
+
+                <div className="page-header">
+                    <h1 className="page-title">⚙️ Консоль адміністратора</h1>
+                    <p className="page-subtitle">Керування змаганнями та протоколами</p>
+                </div>
+
+                <div className="action-bar-center section-spacing">
+                    <button onClick={logout} className="btn btn-danger">
+                        🚪 Вийти з акаунту
+                    </button>
+                </div>
+
+                {error && <div className="alert alert-error">{error}</div>}
+
+                <div className="stack-lg">
+                    {/* Змагання */}
+                    <div className="card">
+                        <div className="card-header">
+                            <h2 className="card-title">🏆 Змагання</h2>
+                        </div>
+                        <div className="card-body action-stack">
+                            <a href="/admin/competition/create" className="btn btn-primary">
+                                ➕ Додати змагання
+                            </a>
+                            <a href="/admin/competition/update" className="btn btn-secondary">
+                                ✏️ Виправити змагання
+                            </a>
+                            <a href="/admin/competition/delete" className="btn btn-danger">
+                                🗑️ Видалити змагання
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Протоколи */}
+                    <div className="card">
+                        <div className="card-header">
+                            <h2 className="card-title">📋 Протоколи</h2>
+                        </div>
+                        <div className="card-body action-stack">
+                            <a href="/admin/protocols/create" className="btn btn-primary">
+                                ➕ Додати протокол
+                            </a>
+                            <a href="/admin/protocols/update" className="btn btn-secondary">
+                                ✏️ Оновити протокол
+                            </a>
+                            <a href="/admin/protocols/delete" className="btn btn-danger">
+                                🗑️ Видалити протокол
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Заявки та заплави */}
+                    <div className="card">
+                        <div className="card-header">
+                            <h2 className="card-title">📝 Заявочний протокол та формування заплавів</h2>
+                        </div>
+                        <div className="card-body action-stack">
+                            <a href="/admin/entries/create" className="btn btn-primary">
+                                ➕ Створити заявку
+                            </a>
+                            <a href="/admin/entries/select" className="btn btn-secondary">
+                                👥 Додати учасників до заявки
+                            </a>
+                            <a href="/admin/seeding/generate" className="btn btn-secondary">
+                                🔄 Автоматичне формування заплавів
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

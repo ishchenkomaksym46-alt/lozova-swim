@@ -1,5 +1,6 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import ReactDOM from "react-dom/client";
+import "./styles/app.css";
 import MainPage from "./components/main/mainPage";
 import AdminConsole from "./components/admin/adminConsole";
 import CreateCompetition from "./components/admin/create/createCompetition";
@@ -10,7 +11,6 @@ import CreateDistance from "./components/admin/create/createDistance";
 import DeleteDistance from "./components/admin/delete/deleteDistance";
 import UpdateCompetitionName from "./components/admin/update/updateCompetitionName";
 import UpdateDistanceName from "./components/admin/update/updateDistanceName";
-import Heats from "./components/heats/heats";
 import CreateHeat from "./components/admin/create/createHeat";
 import UpdateHeat from "./components/admin/update/updateHeat";
 import CreateEntry from "./components/admin/create/createEntry";
@@ -22,6 +22,11 @@ import Sportmens from "./components/sportmens/sportmens";
 import SportmenDetails from "./components/sportmens/sportmenDetails";
 import AddResults from "./components/admin/create/addResults";
 import Results from "./components/results/results";
+import Protocols from "./components/protocols/protocols";
+import CreateProtocol from "./components/admin/create/createProtocol";
+import UpdateProtocol from "./components/admin/update/updateProtocol";
+import DeleteProtocol from "./components/admin/delete/deleteProtocol";
+import Heats from "./components/heats/heats";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -37,7 +42,6 @@ root.render(
             <Route path="/admin/distances/delete" element={<DeleteDistance />} />
             <Route path="/admin/competition/update" element={<UpdateCompetitionName />} />
             <Route path="/admin/distances/update" element={<UpdateDistanceName />} />
-            <Route path="/heats" element={<Heats />} />
             <Route path="/admin/heats/create" element={<CreateHeat />} />
             <Route path="/admin/heats/update" element={<UpdateHeat />} />
             <Route path="/admin/results/add" element={<AddResults />} />
@@ -49,6 +53,11 @@ root.render(
             <Route path="/admin/seeding/generate" element={<GenerateHeats />} />
             <Route path="/sportmens" element={<Sportmens />} />
             <Route path="/sportmens/:id" element={<SportmenDetails />} />
+            <Route path="/protocols" element={<Protocols />} />
+            <Route path="/admin/protocols/create" element={<CreateProtocol />} />
+            <Route path="/admin/protocols/update" element={<UpdateProtocol />} />
+            <Route path="/admin/protocols/delete" element={<DeleteProtocol />} />
+            <Route path="/heats" element={<Heats />} />
         </Routes>
     </BrowserRouter>
 )

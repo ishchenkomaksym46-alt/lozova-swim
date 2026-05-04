@@ -27,18 +27,36 @@ export default function AdminLogin() {
     }
 
     return(
-        <div>
-            <h1>Вхід в адмін панель</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="password"
-                       name="password"
-                       id="password"
-                       onChange={(e) => setPassword(e.target.value)}
-                       placeholder="Пароль: "
-                       required/>
-                <button>Зайти в акаунт</button>
-            </form>
-            <p>{error}</p>
+        <div className="page-wrapper">
+            <div className="container container-narrow">
+                <a href="/" className="back-link">← Назад на головну</a>
+
+                <div className="page-header">
+                    <h1 className="page-title">🔐 Вхід</h1>
+                    <p className="page-subtitle">Адміністраторська панель</p>
+                </div>
+
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Пароль:</label>
+                            <input
+                                type="password"
+                                className="form-input"
+                                name="password"
+                                id="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Введіть пароль"
+                                required
+                            />
+                        </div>
+
+                        <button className="btn btn-primary btn-full">Зайти в акаунт</button>
+                    </form>
+
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                </div>
+            </div>
         </div>
     )
 }

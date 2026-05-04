@@ -185,81 +185,136 @@ export default function AddEntryItems() {
     }
 
     return (
-        <div>
-            <a href="/admin">Повернутися до консолі</a>
-            <h2>Додати учасників до заявки</h2>
-            <form onSubmit={handleSubmit}>
-                <h3>Додати учасників</h3>
-                {participants.map((participant, index) => (
-                    <div key={index} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
-                        <h4>Учасник {index + 1}</h4>
-                        <input
-                            type="text"
-                            value={participant.name}
-                            onChange={(e) => updateParticipant(index, "name", e.target.value)}
-                            placeholder="Ім'я"
-                            required
-                        />
-                        <input
-                            type="text"
-                            value={participant.surname}
-                            onChange={(e) => updateParticipant(index, "surname", e.target.value)}
-                            placeholder="Прізвище"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={participant.birthYear}
-                            onChange={(e) => updateParticipant(index, "birthYear", Number(e.target.value))}
-                            placeholder="Рік народження"
-                            min="1900"
-                            max={new Date().getFullYear()}
-                            required
-                        />
-                        <select
-                            value={participant.distanceId}
-                            onChange={(e) => updateParticipant(index, "distanceId", Number(e.target.value))}
-                            required
-                        >
-                            <option value={0}>Оберіть дистанцію</option>
-                            {distances.map(distance => (
-                                <option key={distance.id} value={distance.id}>{distance.name}</option>
-                            ))}
-                        </select>
-                        <input
-                            type="text"
-                            value={participant.seedTime}
-                            onChange={(e) => updateParticipant(index, "seedTime", e.target.value)}
-                            placeholder="Заявлений час (мм:сс.мс)"
-                            pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
-                            title="Формат: мм:сс.мс (наприклад 1:43.89)"
-                            required
-                        />
-                        {participants.length > 1 && (
-                            <button type="button" onClick={() => removeParticipant(index)}>Видалити</button>
-                        )}
-                    </div>
-                ))}
+        <div className="page-wrapper">
+            <div className="container">
+                <a href="/admin" className="back-link">← Назад до консолі</a>
 
-                <button type="button" onClick={addParticipant}>+ Додати учасника</button>
-                <br />
-                {duplicateCheck.hasDuplicates && (
-                    <div style={{ color: 'red', marginTop: '10px', marginBottom: '10px', padding: '10px', border: '1px solid red', borderRadius: '4px' }}>
-                        <strong>⚠️ Знайдено дублікати:</strong>
-                        <ul style={{ marginTop: '5px', marginBottom: '0' }}>
-                            {duplicateCheck.duplicatesList.map((dup, idx) => (
-                                <li key={idx}>{dup}</li>
+                <div className="page-header">
+                    <h1 className="page-title">👥 Додати учасників до заявки</h1>
+                    <p className="page-subtitle">Заповніть дані учасників для заявки</p>
+                </div>
+
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="card-header">
+                            <h3 className="card-title">Учасники</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                                ⏱️ Формат часу: мм:сс.мс (наприклад: 1:23.45)
+                            </p>
+                        </div>
+
+                        <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
+                            {participants.map((participant, index) => (
+                                <div key={index} className="card" style={{ background: 'var(--gray-50)', borderLeft: '4px solid var(--water-medium)' }}>
+                                    <h4 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--water-deep)', marginBottom: '1rem' }}>
+                                        🏊 Учасник {index + 1}
+                                    </h4>
+                                    <div style={{ display: 'grid', gap: '0.75rem' }}>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <label className="form-label">Ім'я:</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={participant.name}
+                                                onChange={(e) => updateParticipant(index, "name", e.target.value)}
+                                                placeholder="Ім'я"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <label className="form-label">Прізвище:</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={participant.surname}
+                                                onChange={(e) => updateParticipant(index, "surname", e.target.value)}
+                                                placeholder="Прізвище"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <label className="form-label">Рік народження:</label>
+                                            <input
+                                                type="number"
+                                                className="form-input"
+                                                value={participant.birthYear}
+                                                onChange={(e) => updateParticipant(index, "birthYear", Number(e.target.value))}
+                                                placeholder="Рік народження"
+                                                min="1900"
+                                                max={new Date().getFullYear()}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <label className="form-label">Дистанція:</label>
+                                            <select
+                                                className="form-input"
+                                                value={participant.distanceId}
+                                                onChange={(e) => updateParticipant(index, "distanceId", Number(e.target.value))}
+                                                required
+                                            >
+                                                <option value={0}>Оберіть дистанцію</option>
+                                                {distances.map(distance => (
+                                                    <option key={distance.id} value={distance.id}>{distance.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <label className="form-label">Заявлений час:</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={participant.seedTime}
+                                                onChange={(e) => updateParticipant(index, "seedTime", e.target.value)}
+                                                placeholder="1:23.45"
+                                                pattern="^\d{1,2}:[0-5]\d\.\d{2}$"
+                                                title="Формат: мм:сс.мс (наприклад 1:43.89)"
+                                                required
+                                            />
+                                        </div>
+                                        {participants.length > 1 && (
+                                            <button type="button" className="btn btn-danger" onClick={() => removeParticipant(index)} style={{ marginTop: '0.5rem' }}>
+                                                🗑️ Видалити учасника
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
-                        <p style={{ marginTop: '10px', marginBottom: '0' }}>Видаліть дублікати перед збереженням.</p>
-                    </div>
-                )}
-                <button type="submit" disabled={duplicateCheck.hasDuplicates}>
-                    {duplicateCheck.hasDuplicates ? 'Видаліть дублікати' : 'Зберегти учасників'}
-                </button>
-            </form>
-            <p className="success">{success}</p>
-            <p>{error}</p>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+                            <button type="button" className="btn btn-secondary" onClick={addParticipant}>
+                                ➕ Додати учасника
+                            </button>
+                            <button type="button" className="btn btn-secondary" onClick={sortParticipantsByAge}>
+                                🔄 Сортувати за віком
+                            </button>
+                            <button type="button" className="btn btn-secondary" onClick={blockDuplicates}>
+                                🔍 Видалити дублікати
+                            </button>
+                        </div>
+
+                        {duplicateCheck.hasDuplicates && (
+                            <div className="alert alert-error" style={{ marginTop: '1rem' }}>
+                                <strong>⚠️ Знайдено дублікати:</strong>
+                                <ul style={{ marginTop: '0.5rem', marginBottom: '0.5rem', paddingLeft: '1.5rem' }}>
+                                    {duplicateCheck.duplicatesList.map((dup, idx) => (
+                                        <li key={idx}>{dup}</li>
+                                    ))}
+                                </ul>
+                                <p style={{ marginTop: '0.5rem', marginBottom: 0 }}>Видаліть дублікати перед збереженням.</p>
+                            </div>
+                        )}
+
+                        <button type="submit" className="btn btn-primary btn-full" disabled={duplicateCheck.hasDuplicates} style={{ marginTop: '1rem' }}>
+                            {duplicateCheck.hasDuplicates ? '⚠️ Видаліть дублікати' : '💾 Зберегти учасників'}
+                        </button>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+                </div>
+            </div>
         </div>
     );
 }

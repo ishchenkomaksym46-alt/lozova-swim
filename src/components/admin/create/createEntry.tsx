@@ -75,50 +75,65 @@ export default function CreateEntry() {
     }
 
     if (loading) {
-        return <div>Завантаження...</div>;
+        return (
+            <div className="page-wrapper">
+                <div className="container">
+                    <div className="loading">Завантаження змагань</div>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <a href="/admin">Повернутися до консолі</a>
-            <h2>Створити заявку</h2>
-            <p>Спочатку створіть заявку, потім додайте до неї учасників</p>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "15px" }}>
-                    <label htmlFor="competition">Оберіть змагання:</label>
-                    <br />
-                    <select
-                        id="competition"
-                        value={selectedCompetitionId}
-                        onChange={(e) => setSelectedCompetitionId(Number(e.target.value))}
-                        required
-                        style={{ padding: "5px", minWidth: "300px" }}
-                    >
-                        <option value={0}>-- Оберіть змагання --</option>
-                        {competitions.map(comp => (
-                            <option key={comp.id} value={comp.id}>
-                                {comp.name} ({comp.date})
-                            </option>
-                        ))}
-                    </select>
+        <div className="page-wrapper">
+            <div className="container" style={{ maxWidth: '600px' }}>
+                <a href="/admin" className="back-link">← Назад до консолі</a>
+
+                <div className="page-header">
+                    <h1 className="page-title">📝 Створити заявку</h1>
+                    <p className="page-subtitle">Спочатку створіть заявку, потім додайте до неї учасників</p>
                 </div>
-                <div style={{ marginBottom: "15px" }}>
-                    <label htmlFor="entryName">Назва заявки:</label>
-                    <br />
-                    <input
-                        id="entryName"
-                        type="text"
-                        value={entryName}
-                        onChange={(e) => setEntryName(e.target.value)}
-                        placeholder="Назва заявки (наприклад, назва команди)"
-                        required
-                        style={{ padding: "5px", minWidth: "300px" }}
-                    />
+
+                <div className="card">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="competition">Оберіть змагання:</label>
+                            <select
+                                id="competition"
+                                className="form-input"
+                                value={selectedCompetitionId}
+                                onChange={(e) => setSelectedCompetitionId(Number(e.target.value))}
+                                required
+                            >
+                                <option value={0}>-- Оберіть змагання --</option>
+                                {competitions.map(comp => (
+                                    <option key={comp.id} value={comp.id}>
+                                        {comp.name} ({comp.date})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="entryName">Назва заявки:</label>
+                            <input
+                                id="entryName"
+                                type="text"
+                                className="form-input"
+                                value={entryName}
+                                onChange={(e) => setEntryName(e.target.value)}
+                                placeholder="Назва заявки (наприклад, назва команди)"
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" className="btn btn-primary btn-full">Створити заявку</button>
+                    </form>
+
+                    {success && <div className="alert alert-success" style={{ marginTop: '1rem' }}>{success}</div>}
+                    {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
                 </div>
-                <button type="submit">Створити заявку</button>
-            </form>
-            <p className="success">{success}</p>
-            <p style={{ color: "red" }}>{error}</p>
+            </div>
         </div>
     );
 }
