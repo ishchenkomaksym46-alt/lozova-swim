@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {api} from "../../api/axios";
 import {useAdminAuth} from "../../hooks/useAdminAuth";
+import {clearAdminToken} from "../../utils/adminAuth";
 
 export default function AdminConsole() {
     const [error, setError] = useState<string | null>(null);
@@ -18,6 +19,7 @@ export default function AdminConsole() {
             if(!res.data.success) {
                 setError(res.data.message);
             } else {
+                clearAdminToken();
                 navigate('/');
             }
         } catch (e: any) {

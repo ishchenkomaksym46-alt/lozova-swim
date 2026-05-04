@@ -1,6 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {api} from "../../api/axios";
+import {setAdminToken} from "../../utils/adminAuth";
 
 export default function AdminLogin() {
     const [password, setPassword] = useState<string>("");
@@ -14,10 +15,14 @@ export default function AdminLogin() {
         try {
             const res = await api.post('/admin/login', { password });
 
-            if(res.data.success) {
+            if (res.data.success) {
+                if (res.data.token) {
+                    setAdminToken(res.data.token);
+                }
+
                 navigate('/admin');
             } else {
-                setError(res.data.message || "Неправильний пароль!");
+                setError(res.data.message || "Невірний пароль!");
             }
         } catch (e: any) {
             console.error(e);
@@ -29,7 +34,7 @@ export default function AdminLogin() {
     return(
         <div className="page-wrapper">
             <div className="container container-narrow">
-                <a href="/" className="back-link">← Назад на головну</a>
+                <a href="/" className="back-link">Назад на головну</a>
 
                 <div className="page-header">
                     <h1 className="page-title">🔐 Вхід</h1>
