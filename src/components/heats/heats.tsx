@@ -155,7 +155,7 @@ export default function Heats() {
     return(
         <div className="page-wrapper">
             <div className="container">
-                <a href={`/distances?id=${searchParam.get("competitionId") || ""}`} className="back-link">← Назад до дистанцій</a>
+                <a href={`/`} className="back-link">← Назад на головну</a>
 
                 <div className="page-header">
                     <h1 className="page-title">🏊 Запливи</h1>
@@ -174,6 +174,9 @@ export default function Heats() {
                             </a>
                             <a href={`/admin/heats/update?id=${id}`} className="btn btn-secondary">
                                 ✏️ Виправити заплив
+                            </a>
+                            <a href={`/admin/results/add?distanceId=${id}`} className="btn btn-primary">
+                                ➕ Додати результати
                             </a>
                         </div>
                     </div>
