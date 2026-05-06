@@ -216,7 +216,7 @@ export default function GenerateHeats() {
                                         <option value={0}>-- Оберіть заявку --</option>
                                         {entries.map((entry) => (
                                             <option key={entry.id} value={entry.id}>
-                                                {entry.name} (учасників: {entry._count.entryItems})
+                                                {entry.name} (учасників: {entry._count?.entryItems || 0})
                                             </option>
                                         ))}
                                     </select>

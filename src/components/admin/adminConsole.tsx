@@ -92,11 +92,14 @@ export default function AdminConsole() {
                             <a href="/admin/entries/create" className="btn btn-primary">
                                 ➕ Створити заявку
                             </a>
+                            <a href="/admin/showEntryItems" className="btn btn-secondary">
+                                🔎 Дивитись учасників заявки
+                            </a>
                             <a href="/admin/entries/select" className="btn btn-secondary">
                                 👥 Додати учасників до заявки
                             </a>
                             <a href="/admin/seeding/generate" className="btn btn-secondary">
-                                🔄 Автоматичне формування заплавів
+                                🔄 Автоматичне формування запливів
                             </a>
                         </div>
                     </div>

@@ -25,12 +25,15 @@ export default function AddEntryItems() {
     const [distances, setDistances] = useState<Distance[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useAdminAuth();
 
     useEffect(() => {
         // Fetch entry details to get competition ID, then fetch distances
         const fetchEntryAndDistances = async () => {
+            setLoading(true);
+
             try {
                 // Get the entry's competition ID
                 const entryRes = await api.get('/entries/details', {
@@ -52,6 +55,8 @@ export default function AddEntryItems() {
             } catch (e) {
                 console.error(e);
                 setError("Помилка при завантаженні дистанцій");
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -68,36 +73,6 @@ export default function AddEntryItems() {
     function addParticipant() {
         setParticipants([...participants, { name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "" }]);
         setError(null);
-    }
-
-    function sortParticipantsByAge() {
-        const sorted = [...participants].sort((a, b) => b.birthYear - a.birthYear); // youngest first (higher year = younger)
-        setParticipants(sorted);
-        setSuccess("Учасників відсортовано за віком (від молодших до старших)");
-    }
-
-    function blockDuplicates() {
-        const seen = new Map<string, number>();
-        const duplicates: string[] = [];
-        const unique: Participant[] = [];
-
-        participants.forEach((participant, index) => {
-            const key = `${participant.name.trim().toLowerCase()}_${participant.surname.trim().toLowerCase()}_${participant.birthYear}_${participant.distanceId}`;
-
-            if (seen.has(key)) {
-                duplicates.push(`${participant.name} ${participant.surname} (${participant.birthYear}) - дистанція ${distances.find(d => d.id === participant.distanceId)?.name || participant.distanceId}`);
-            } else {
-                seen.set(key, index);
-                unique.push(participant);
-            }
-        });
-
-        if (duplicates.length > 0) {
-            setParticipants(unique);
-            setError(`Видалено ${duplicates.length} дублікатів: ${duplicates.join(', ')}`);
-        } else {
-            setSuccess("Дублікатів не знайдено");
-        }
     }
 
     function removeParticipant(index: number) {
@@ -139,6 +114,7 @@ export default function AddEntryItems() {
         e.preventDefault();
         setError(null);
         setSuccess(null);
+        setLoading(true);
 
         // Validate time format
         for (let i = 0; i < participants.length; i++) {
@@ -181,6 +157,8 @@ export default function AddEntryItems() {
         } catch (e: any) {
             console.error(e);
             setError("Невідома помилка");
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -211,17 +189,6 @@ export default function AddEntryItems() {
                                     </h4>
                                     <div style={{ display: 'grid', gap: '0.75rem' }}>
                                         <div className="form-group" style={{ marginBottom: 0 }}>
-                                            <label className="form-label">Ім'я:</label>
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                value={participant.name}
-                                                onChange={(e) => updateParticipant(index, "name", e.target.value)}
-                                                placeholder="Ім'я"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group" style={{ marginBottom: 0 }}>
                                             <label className="form-label">Прізвище:</label>
                                             <input
                                                 type="text"
@@ -229,6 +196,17 @@ export default function AddEntryItems() {
                                                 value={participant.surname}
                                                 onChange={(e) => updateParticipant(index, "surname", e.target.value)}
                                                 placeholder="Прізвище"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <label className="form-label">Ім'я:</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={participant.name}
+                                                onChange={(e) => updateParticipant(index, "name", e.target.value)}
+                                                placeholder="Ім'я"
                                                 required
                                             />
                                         </div>
@@ -286,27 +264,10 @@ export default function AddEntryItems() {
                             <button type="button" className="btn btn-secondary" onClick={addParticipant}>
                                 ➕ Додати учасника
                             </button>
-                            <button type="button" className="btn btn-secondary" onClick={sortParticipantsByAge}>
-                                🔄 Сортувати за віком
-                            </button>
-                            <button type="button" className="btn btn-secondary" onClick={blockDuplicates}>
-                                🔍 Видалити дублікати
-                            </button>
                         </div>
 
-                        {duplicateCheck.hasDuplicates && (
-                            <div className="alert alert-error" style={{ marginTop: '1rem' }}>
-                                <strong>⚠️ Знайдено дублікати:</strong>
-                                <ul style={{ marginTop: '0.5rem', marginBottom: '0.5rem', paddingLeft: '1.5rem' }}>
-                                    {duplicateCheck.duplicatesList.map((dup, idx) => (
-                                        <li key={idx}>{dup}</li>
-                                    ))}
-                                </ul>
-                                <p style={{ marginTop: '0.5rem', marginBottom: 0 }}>Видаліть дублікати перед збереженням.</p>
-                            </div>
-                        )}
-
-                        <button type="submit" className="btn btn-primary btn-full" disabled={duplicateCheck.hasDuplicates} style={{ marginTop: '1rem' }}>
+                        {loading && <p>Завантаження...</p>}
+                        <button type="submit" className="btn btn-primary btn-full" disabled={loading} style={{ marginTop: '1rem' }}>
                             {duplicateCheck.hasDuplicates ? '⚠️ Видаліть дублікати' : '💾 Зберегти учасників'}
                         </button>
                     </form>

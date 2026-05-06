@@ -296,6 +296,11 @@ body::before {
     box-shadow: var(--shadow-xl);
 }
 
+.card-hover-right:hover {
+    transform: translateX(7px);
+    box-shadow: var(--shadow-lg);
+}
+
 .card-header {
     border-bottom: 2px solid var(--gray-200);
     padding-bottom: 1rem;

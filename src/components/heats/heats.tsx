@@ -198,16 +198,6 @@ export default function Heats() {
                     <div className="section-spacing">
                         {Object.keys(groupedHeats).map((ageGroup) => (
                             <div key={ageGroup} style={{ marginBottom: '2rem' }}>
-                                <h2 className="section-title" style={{
-                                    fontSize: '1.5rem',
-                                    marginBottom: '1rem',
-                                    color: '#2c3e50',
-                                    borderBottom: '2px solid #3498db',
-                                    paddingBottom: '0.5rem'
-                                }}>
-                                    👥 Вікова група: {ageGroup}
-                                </h2>
-
                                 <div className="cards-grid">
                                     {groupedHeats[ageGroup]
                                         ?.sort((a, b) => a.heatNumber - b.heatNumber)

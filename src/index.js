@@ -27,6 +27,7 @@ import CreateProtocol from "./components/admin/create/createProtocol";
 import UpdateProtocol from "./components/admin/update/updateProtocol";
 import DeleteProtocol from "./components/admin/delete/deleteProtocol";
 import Heats from "./components/heats/heats";
+import ShowEntryItems from "./components/admin/entries/showEntryItems";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -58,6 +59,7 @@ root.render(
             <Route path="/admin/protocols/update" element={<UpdateProtocol />} />
             <Route path="/admin/protocols/delete" element={<DeleteProtocol />} />
             <Route path="/heats" element={<Heats />} />
+            <Route path="/admin/showEntryItems" element={<ShowEntryItems />} />
         </Routes>
     </BrowserRouter>
 )

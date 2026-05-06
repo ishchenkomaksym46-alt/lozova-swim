@@ -127,7 +127,7 @@ export default function SelectEntryToAddParticipants() {
                                         {entries.map((entry, idx) => (
                                             <tr key={entry.id} style={{ background: idx % 2 === 0 ? 'var(--white)' : 'var(--gray-50)' }}>
                                                 <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', fontWeight: '600' }}>{entry.name}</td>
-                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center' }}>{entry._count.entryItems}</td>
+                                                <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center' }}>{entry._count?.entryItems || 0}</td>
                                                 <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem' }}>{new Date(entry.createdAt).toLocaleString('uk-UA')}</td>
                                                 <td style={{ border: '1px solid var(--gray-300)', padding: '0.75rem', textAlign: 'center' }}>
                                                     <a href={`/admin/entries/items/add?id=${entry.id}`} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
