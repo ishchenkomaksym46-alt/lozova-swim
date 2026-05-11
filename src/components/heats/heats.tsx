@@ -134,7 +134,7 @@ export default function Heats() {
         return acc;
     }, {} as Record<string, HeatType[]>);
 
-    async function deleteHeat(heatNumber: number) {
+    async function deleteHeat(heatNumber: number, heatId: number) {
         setError(null);
         setLoading(true);
 
@@ -143,6 +143,8 @@ export default function Heats() {
 
             if(!res.data.success) {
                 setError(res.data.message);
+            } else {
+                window.location.reload();
             }
         } catch (e) {
             console.error(e);
@@ -204,7 +206,7 @@ export default function Heats() {
                                         .map((heat: HeatType) => (
                                         <div key={heat.id} className="card card-hover accent-card">
                                             {isAdmin && (
-                                                <button className="btn btn-secondary" onClick={() => deleteHeat(heat.heatNumber)}>🗑️ Видалити заплив</button>
+                                                <button className="btn btn-secondary" onClick={() => deleteHeat(heat.heatNumber, heat.id)}>🗑️ Видалити заплив</button>
                                             )}
                                             <div className="card-header">
                                                 <h2 className="card-title">Заплив #{heat.heatNumber}</h2>
