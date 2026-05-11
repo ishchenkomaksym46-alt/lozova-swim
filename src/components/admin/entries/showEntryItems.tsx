@@ -30,6 +30,7 @@ type EntryItemsType = {
     birthYear: number,
     seedTime: string,
     distance: DistancesType,
+    gender: 'WOMEN' | 'MEN',
 }
 
 export default function ShowEntryItems() {
@@ -146,6 +147,7 @@ export default function ShowEntryItems() {
                                         <div className="card-header">
                                             <h3 className="card-title">{el.name} {el.surname}</h3>
                                             <p className="detail-value">Рік народження: {el.birthYear}</p>
+                                            <p className="detail-value">Стать: {el.gender === 'WOMEN' ? '👩 Жінка' : '👨 Чоловік'}</p>
                                         </div>
                                         <div className="card-body">
                                             <div className="detail-grid">

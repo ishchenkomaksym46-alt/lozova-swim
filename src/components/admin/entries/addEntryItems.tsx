@@ -14,13 +14,14 @@ interface Participant {
     birthYear: number;
     distanceId: number;
     seedTime: string;
+    gender: 'WOMEN' | 'MEN';
 }
 
 export default function AddEntryItems() {
     const [searchParam] = useSearchParams();
     const entryId = searchParam.get("id");
     const [participants, setParticipants] = useState<Participant[]>([
-        { name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "" }
+        { name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "", gender: "WOMEN" }
     ]);
     const [distances, setDistances] = useState<Distance[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -71,7 +72,7 @@ export default function AddEntryItems() {
     }
 
     function addParticipant() {
-        setParticipants([...participants, { name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "" }]);
+        setParticipants([...participants, { name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "", gender: "WOMEN" }]);
         setError(null);
     }
 
@@ -140,7 +141,8 @@ export default function AddEntryItems() {
                     surname: participant.surname,
                     birthYear: participant.birthYear,
                     distanceId: participant.distanceId,
-                    seedTime: participant.seedTime
+                    seedTime: participant.seedTime,
+                    gender: participant.gender
                 });
 
                 if (res.data.success) {
@@ -150,7 +152,7 @@ export default function AddEntryItems() {
 
             if (successCount === participants.length) {
                 setSuccess(`Успішно додано ${successCount} учасників`);
-                setParticipants([{ name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "" }]);
+                setParticipants([{ name: "", surname: "", birthYear: new Date().getFullYear() - 10, distanceId: 0, seedTime: "", gender: "WOMEN" }]);
             } else {
                 setError(`Додано ${successCount} з ${participants.length} учасників`);
             }
@@ -210,19 +212,31 @@ export default function AddEntryItems() {
                                                 required
                                             />
                                         </div>
-                                        <div className="form-group" style={{ marginBottom: 0 }}>
-                                            <label className="form-label">Рік народження:</label>
-                                            <input
-                                                type="number"
-                                                className="form-input"
-                                                value={participant.birthYear}
-                                                onChange={(e) => updateParticipant(index, "birthYear", Number(e.target.value))}
-                                                placeholder="Рік народження"
-                                                min="1900"
-                                                max={new Date().getFullYear()}
-                                                required
-                                            />
-                                        </div>
+                                         <div className="form-group" style={{ marginBottom: 0 }}>
+                                             <label className="form-label">Рік народження:</label>
+                                             <input
+                                                 type="number"
+                                                 className="form-input"
+                                                 value={participant.birthYear}
+                                                 onChange={(e) => updateParticipant(index, "birthYear", Number(e.target.value))}
+                                                 placeholder="Рік народження"
+                                                 min="1900"
+                                                 max={new Date().getFullYear()}
+                                                 required
+                                             />
+                                         </div>
+                                         <div className="form-group" style={{ marginBottom: 0 }}>
+                                             <label className="form-label">Стать:</label>
+                                             <select
+                                                 className="form-input"
+                                                 value={participant.gender}
+                                                 onChange={(e) => updateParticipant(index, "gender", e.target.value as 'WOMEN' | 'MEN')}
+                                                 required
+                                             >
+                                                 <option value="WOMEN">Жінка</option>
+                                                 <option value="MEN">Чоловік</option>
+                                             </select>
+                                         </div>
                                         <div className="form-group" style={{ marginBottom: 0 }}>
                                             <label className="form-label">Дистанція:</label>
                                             <select
